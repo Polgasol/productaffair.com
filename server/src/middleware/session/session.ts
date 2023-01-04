@@ -7,7 +7,7 @@ dotenv.config();
 const Reddistore = require('connect-redis')(session);
 
 const sessions = session({
-    secret: `${process.env.SESSION_SECRET}`, // specify what is the default type of the object
+  secret: `${process.env.SESSION_SECRET}`, // specify what is the default type of the object
   name: 'sid',
   genid: () => {
     return nanoid(36); // use UUIDs for session IDs to be stored in the cookie. this id is associated with data in store
