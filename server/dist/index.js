@@ -29,12 +29,13 @@ const session_1 = __importDefault(require("./src/middleware/session/session"));
 const redis_2 = __importDefault(require("./src/models/redis/redis"));
 const cors_1 = __importDefault(require("./src/middleware/cors/cors"));
 const logger_1 = __importDefault(require("./src/logger"));
+const config_1 = __importDefault(require("./src/config/config"));
 const apiError_1 = __importDefault(require("./src/middleware/api-error-handler/apiError"));
 dotenv_1.default.config();
 require('./src/config/passport-google');
 require('./src/config/passport-local-login');
 require('./src/config/passport-local-register');
-const PORT = process.env.PORT || 5000;
+const PORT = config_1.default.server.port;
 const server = (0, express_1.default)();
 try {
     (() => __awaiter(void 0, void 0, void 0, function* () {

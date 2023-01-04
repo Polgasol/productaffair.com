@@ -17,6 +17,7 @@ import sessions from './src/middleware/session/session';
 import redisClient from './src/models/redis/redis';
 import corsMw from './src/middleware/cors/cors';
 import logger from './src/logger';
+import config from './src/config/config';
 
 import ApiError from './src/middleware/api-error-handler/apiError';
 // import helmet from 'helmet';
@@ -26,7 +27,7 @@ require('./src/config/passport-google');
 require('./src/config/passport-local-login');
 require('./src/config/passport-local-register');
 
-const PORT = process.env.PORT || 5000;
+const PORT = config.server.port;
 
 const server = express();
 
