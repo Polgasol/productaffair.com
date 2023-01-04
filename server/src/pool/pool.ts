@@ -1,8 +1,7 @@
 import { Pool } from 'pg';
 import dotenv from 'dotenv';
-import path from 'path';
 
-dotenv.config({ path: path.join(__dirname, '../.env') });
+dotenv.config();
 
 const db = new Pool({
   host: process.env.POSTGRES_HOST,

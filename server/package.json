@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "nodemon index.ts NODE_ENV=development",
-    "start": "ts-node index.ts NODE_ENV=production",
+    "start": "node index.js NODE_ENV=production",
     "build": "tsc -p tsconfig.prod.json",
     "test": "jest",
     "test:watch": "jest --watch"

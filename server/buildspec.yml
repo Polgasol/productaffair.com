@@ -4,14 +4,17 @@ env:
 phases:
   install:
     runtime-versions:
-      nodejs: 14.x
+      nodejs: 16.x
+    commands:
+      - npm install -g typescript
+      - npm install
   pre_build:
     commands:
       - echo install pre build commands
   build:
     commands:
       - echo Running tests
-      - npm install && npm run build
+      - npm run build
       - echo building
   post_build:
     commands:

@@ -1,8 +1,5 @@
 /* eslint-disable import/first */
 import dotenv from 'dotenv';
-import path from 'path';
-
-dotenv.config({ path: path.join(__dirname, '.env') }); // needs to be on top before the passportjs & session librarires
 
 import express from 'express';
 import passport from 'passport';
@@ -24,6 +21,7 @@ import logger from './src/logger';
 import ApiError from './src/middleware/api-error-handler/apiError';
 // import helmet from 'helmet';
 // import compression from 'compression';
+dotenv.config(); // needs to be on top before the passportjs & session librarires
 require('./src/config/passport-google');
 require('./src/config/passport-local-login');
 require('./src/config/passport-local-register');
