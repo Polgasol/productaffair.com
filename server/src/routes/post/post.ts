@@ -136,6 +136,11 @@ router.get(
           try {
             await db.query('BEGIN');
             await db.query(`UPDATE posts SET views_count=views_count + 1 WHERE pk_post_id = $1`, [Number(postId)]);
+            await db.query(`INSERT INTO views(fk_post_id,viewer_username,ipa) VALUES($1,$2,$3)`, [
+              Number(postId),
+              req.user.username,
+              req.ip,
+            ]);
             await db.query('COMMIT');
             return ['Success', null];
           } catch (e) {
@@ -281,6 +286,7 @@ router.get(
           try {
             await db.query('BEGIN');
             await db.query(`UPDATE posts SET views_count=views_count + 1 WHERE pk_post_id = $1`, [Number(postId)]);
+            await db.query(`INSERT INTO views(fk_post_id,ipa) VALUES($1,$2)`, [Number(postId), req.ip]);
             await db.query('COMMIT');
             return ['Success', null];
           } catch (e) {
