@@ -5,9 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_session_1 = __importDefault(require("express-session"));
 const nanoid_1 = require("nanoid");
-const dotenv_1 = __importDefault(require("dotenv"));
 const redis_1 = __importDefault(require("../../models/redis/redis"));
-dotenv_1.default.config();
 const Reddistore = require('connect-redis')(express_session_1.default);
 const sessions = (0, express_session_1.default)({
     secret: `${process.env.SESSION_SECRET}`,

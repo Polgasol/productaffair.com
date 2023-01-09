@@ -1,9 +1,7 @@
 import session from 'express-session';
 import { nanoid } from 'nanoid';
-import dotenv from 'dotenv';
 import redisClient from '../../models/redis/redis';
 
-dotenv.config();
 const Reddistore = require('connect-redis')(session);
 
 const sessions = session({

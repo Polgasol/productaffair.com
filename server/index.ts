@@ -1,6 +1,4 @@
 /* eslint-disable import/first */
-import dotenv from 'dotenv';
-
 import express from 'express';
 import passport from 'passport';
 import bodyParser from 'body-parser';
@@ -22,7 +20,6 @@ import config from './src/config/config';
 import ApiError from './src/middleware/api-error-handler/apiError';
 // import helmet from 'helmet';
 // import compression from 'compression';
-dotenv.config(); // needs to be on top before the passportjs & session librarires
 require('./src/config/passport-google');
 require('./src/config/passport-local-login');
 require('./src/config/passport-local-register');
