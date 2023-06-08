@@ -1,0 +1,23 @@
+@import '../../../../styles/mixins.scss';
+@import '../../../../styles/variables.scss';
+
+.verify-page-con {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+.verify-title-text {
+  font-size: 1.5rem;
+}
+.verify-title-con {
+  margin: 0 0 2rem 0;
+}
+.code-title-text {
+  font-size: .80rem;
+}
+.code-title-con {
+  margin:0 0 1rem 0;
+  width: 100%;
+}

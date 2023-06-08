@@ -1,0 +1,9 @@
+@use "sass:math";
+
+@function toRem($px) {
+  @if math.is-unitless($px) {
+    @return math.div($px, 16) + rem;
+  } @else {
+    @error 'Data input has a unit included (eg: px, rem)...';
+  }
+}

@@ -1,0 +1,22 @@
+@use "../../../../styles/utilities/" as u;
+
+.nav-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: u.toRem(45);
+  //margin-left: u.toRem(16);
+  margin-right: u.toRem(16);
+  // @include u.breakpoint(l) {
+  //   margin-left: u.toRem(25);
+  // }
+
+  // @include u.breakpoint(xl) {
+  //   margin-left: u.toRem(50);
+  // }
+  &__link {
+    color: var(--white);
+    text-decoration: none;
+  }
+
+}

@@ -1,0 +1,11 @@
+@import "../../.././../styles/mixins.scss";
+@import "../../.././../styles/variables.scss";
+
+.store {
+  width: 100%;
+
+  &__label {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+}

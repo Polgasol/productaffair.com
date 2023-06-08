@@ -1,0 +1,9 @@
+@use '../../../../styles/utilities/' as u;
+
+.followers {
+  margin-top: u.toRem(8);
+  &__text {
+    color: var(--meta-data);
+    font-size: u.toRem(14);
+  }
+}

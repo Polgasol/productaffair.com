@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ajvValidateAbout = exports.ajvValidateLike = exports.ajvValidateFollow = exports.ajvValidateGetCategories = exports.ajvValidatePostId = exports.ajvValidateSearch = exports.ajvValidatePages = exports.ajvValidateComments = exports.ajvValidateGoogleUsername = exports.ajvValidateUpload = exports.ajvValidateLogin = exports.ajvVerifyCode = exports.ajvValidateReg = void 0;
+exports.ajvValidateCommentDelete = exports.ajvValidateCommentLike = exports.ajvValidateGetComments = exports.ajvValidateAbout = exports.ajvValidateLike = exports.ajvValidateFollow = exports.ajvValidateGetCategories = exports.ajvValidatePostId = exports.ajvValidateSearch = exports.ajvValidatePages = exports.ajvValidateComments = exports.ajvValidateGoogleUsername = exports.ajvValidateUpload = exports.ajvValidateLogin = exports.ajvVerifyCode = exports.ajvValidateReg = void 0;
 const instance_1 = __importDefault(require("./instance"));
 const registerSchema = {
     type: 'object',
@@ -70,7 +70,6 @@ const verifyCodeSchema = {
             type: 'string',
             minLength: 8,
             maxLength: 8,
-            pattern: '^(?=.{1,8}$)(?:[0-9a-zA-Zd]+(?:[0-9a-zA-Zd])*)+$',
         },
     },
     required: ['verificationCode'],
@@ -88,7 +87,7 @@ const loginSchema = {
             type: 'string',
             minLength: 1,
             maxLength: 100,
-            pattern: '^(?=.{1,100}$)(?:[a-zA-Zd]+(?:[_][a-zA-Zd])*)+$',
+            pattern: '^(?=.{1,100}$)(?:[0-9a-zA-Zd]+(?:[_][0-9a-zA-Zd])*)+$',
         },
         password: {
             type: 'string',
@@ -114,13 +113,13 @@ const uploadSchema = {
             type: 'string',
             minLength: 1,
             maxLength: 100,
-            pattern: '^[A-Za-z0-9+!?,.:;()@#s ]{1,100}$',
+            pattern: '^[A-Za-z0-9+!?_/&$%-*^"><,.:;()@#s ]{1,100}$',
         },
         storeName: {
             type: 'string',
             minLength: 1,
             maxLength: 100,
-            pattern: '^[A-Za-z0-9+!?,.:;()@#s ]{1,100}$',
+            pattern: '^[A-Za-z0-9+!?_/&$%-*^"><,.:;()@#s ]{1,100}$',
         },
         ratings: {
             type: 'array',
@@ -194,16 +193,23 @@ const validateGoogleUsername = {
 const sanitizeComments = {
     type: 'object',
     properties: {
+        id: {
+            type: 'string',
+            minLength: 1,
+            maxLength: 1000000000000000,
+            pattern: '^[0-9]{1,1000000000000000}$',
+        },
         commentText: {
             type: 'string',
             minLength: 1,
             maxLength: 500,
         },
     },
-    required: ['commentText'],
+    required: ['id', 'commentText'],
     additionalProperties: false,
     errorMessage: {
         properties: {
+            id: '404',
             commentText: '404',
         },
     },
@@ -262,6 +268,23 @@ const postIdSchema = {
         },
     },
     required: ['postId'],
+    additionalProperties: false,
+    errorMessage: {
+        properties: {
+            postId: '404',
+        },
+    },
+};
+const commentIdSchema = {
+    type: 'object',
+    properties: {
+        commentId: {
+            type: 'number',
+            minimum: 0,
+            maximum: 1000000000000000,
+        },
+    },
+    required: ['commentId'],
     additionalProperties: false,
     errorMessage: {
         properties: {
@@ -345,6 +368,31 @@ const aboutSchema = {
         },
     },
 };
+const getCommentsUrlSchema = {
+    type: 'object',
+    properties: {
+        postId: {
+            type: 'string',
+            minLength: 1,
+            maxLength: 1000000000000000,
+            pattern: '^[0-9]{1,1000000000000000}$',
+        },
+        page: {
+            type: 'string',
+            minLength: 1,
+            maxLength: 5,
+            pattern: '^[0-9]{1,5}$',
+        },
+    },
+    required: ['postId', 'page'],
+    additionalProperties: false,
+    errorMessage: {
+        properties: {
+            postId: '404',
+            page: '404',
+        },
+    },
+};
 const ajvValidateReg = instance_1.default.compile(registerSchema);
 exports.ajvValidateReg = ajvValidateReg;
 const ajvVerifyCode = instance_1.default.compile(verifyCodeSchema);
@@ -371,4 +419,10 @@ const ajvValidateLike = instance_1.default.compile(postIdSchema);
 exports.ajvValidateLike = ajvValidateLike;
 const ajvValidateAbout = instance_1.default.compile(aboutSchema);
 exports.ajvValidateAbout = ajvValidateAbout;
+const ajvValidateGetComments = instance_1.default.compile(getCommentsUrlSchema);
+exports.ajvValidateGetComments = ajvValidateGetComments;
+const ajvValidateCommentLike = instance_1.default.compile(commentIdSchema);
+exports.ajvValidateCommentLike = ajvValidateCommentLike;
+const ajvValidateCommentDelete = instance_1.default.compile(commentIdSchema);
+exports.ajvValidateCommentDelete = ajvValidateCommentDelete;
 //# sourceMappingURL=auth.js.map

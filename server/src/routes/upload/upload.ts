@@ -9,6 +9,7 @@ import db from '../../pool/pool';
 import ApiError from '../../middleware/api-error-handler/apiError';
 import redisClient from '../../models/redis/redis';
 import { authCheck, authCheckMw } from '../../middleware/authCheck/authCheck';
+// import logger from '../../logger';
 // AWS SDK AUTO-DETECTS the access key and secret key in environment variables. No need for explicit declaration.
 
 const limits = {
@@ -18,6 +19,7 @@ const limits = {
 };
 
 const fileFilter = (req: any, file: any, cb: any) => {
+  // logger.info(`FILES TYPE =============> ${file.mimetype}`);
   if (
     file.mimetype === 'image/jpeg' ||
     file.mimetype === 'image/jpg' ||
@@ -42,6 +44,7 @@ router.post(
   upload,
   async (req: any, res, next) => {
     req.body.ratings = JSON.parse(req.body.ratings); // parse first the stringify object ratings from Form Data.
+    // logger.info(`Success parsing req.body.ratings: ===> ${req.body.ratings}`);
     next();
   },
   authCheckMw,
@@ -49,10 +52,13 @@ router.post(
   async (req: any, res, next) => {
     const { files }: any = req;
     const { title, storeName, ratings, category } = req.body; // save references
+    // logger.info(`title, storeName, ratings, category: ===> ${title}, ${storeName}, ${ratings}, ${category}`);
     const userId = req.user.id; // req.user.id
     const { username } = req.user; // req.user.username
+    // logger.info(`User requesting: ===> ${userId}`);
     // if file size exceed 1MB do sharp and imagemin
     const overallRating = ratings.map((n: any) => n.score).reduce((prev: any, score: any) => prev + score, 0) / 3; // 0 is initial value
+    // logger.info(`overallRating: ===> ${overallRating}`);
     const uploadDetails: any = async (
       idUser: any,
       userName: any,
@@ -78,10 +84,12 @@ router.post(
             averageRating,
           ],
         );
+        // logger.info(`Success postgres uploading: ===> `);
         await db.query(`UPDATE users SET post_count=post_count+1 WHERE pk_users_id=$1`, [userId]);
         await db.query('COMMIT');
         return [postId, null];
       } catch (e1) {
+        // logger.info(`Error postgres uploading: ===> ${e1}`);
         await db.query('ROLLBACK');
         return [null, e1];
       }
@@ -100,6 +108,7 @@ router.post(
         const dateCreated = await db.query(`SELECT date_created from posts where pk_post_id=$1`, [
           postId.rows[0].pk_post_id,
         ]);
+        // logger.info(`dateCreated query from postgres: ===> ${dateCreated}`);
         // without v4 for zAdd is not working bug...
         // if error delete the inserted data
         if (dateCreated) {
@@ -147,10 +156,13 @@ router.post(
               ]);
             return multi.exec();
           });
+          // logger.info(`Success uploading to redis: ===>`);
           return ['Success', null];
         }
+        // logger.info(`Error uploading to redis===>`);
         return [null, 'Error'];
       } catch (e2) {
+        // logger.info(`Rollback postgres and redis e2: ===> ${e2}`);
         await db.query('ROLLBACK');
         await redisClient.executeIsolated(async (isolatedClient) => {
           await isolatedClient.watch(`user:${userId}`);
@@ -172,12 +184,14 @@ router.post(
         // if error delete the inserted data
         const bucketName = process.env.AWS_S3_BUCKET_NAME as string;
         const s3 = new S3();
-
+        // logger.info(`postFiles, details: ===> ${postFiles}, ${details}`);
         const uploadParams = postFiles.map((file: any) => {
           const appendFileName = nanoid(64); // 32 characters append to file original filename.
+          // logger.info(`AppendFilename: ===> ${appendFileName}`);
           const fileName = appendFileName + file.originalname;
           // https://stackoverflow.com/questions/190852/how-can-i-get-file-extensions-with-javascript
           const checkFileExtension = file.originalname.slice(((file.originalname.lastIndexOf('.') - 1) >>> 0) + 2);
+          // logger.info(`CheckFileExtension: ===> ${checkFileExtension}`);
           if (
             checkFileExtension === 'jpeg' ||
             checkFileExtension === 'jpg' ||
@@ -201,29 +215,36 @@ router.post(
           // const filename = params.Key.replace("imageuploads/", ""); // use replace if you know what string already to be replaced by empty string
           // use slice if you dont know what digits, characters to be removed
           const filename = params.Key.substring(13, params.Key.length - 0);
+          // logger.info(`filename: ===> ${filename}`);
           // const filename2 = params.Key.replace("imageuploads/", ""); substring is 0(1) which makes it faster
 
           const mediaId = nanoid(32);
+          // logger.info(`mediaId: ===> ${mediaId}`);
           try {
             await db.query('BEGIN');
             await db.query(
               `INSERT INTO images(fk_post_id, media_id, image_url) VALUES ($1,$2, $3) RETURNING pk_image_id`,
               [details.rows[0].pk_post_id, mediaId, filename],
             );
+            // logger.info(`success upload images to postgres: ===>`);
             await db.query('COMMIT');
           } catch (e4) {
+            // logger.info(`error upload images to postgres: ===> ${e4}`);
             await db.query('ROLLBACK');
             return e4;
           }
           try {
             await redisClient.executeIsolated(async (isolatedClient) => {
-              await isolatedClient.watch(`post:${uploadDetails.rows[0].pk_post_id}`);
+              // logger.info(`UPLOAAAAAAD DETAILS ======> ${details.rows[0].pk_post_id}`);
+              await isolatedClient.watch(`post:${details.rows[0].pk_post_id}`);
               const multi = isolatedClient
                 .multi()
-                .hSet(`images:${uploadDetails.rows[0].pk_post_id}`, JSON.stringify(filename), JSON.stringify(filename));
+                .hSet(`images:${details.rows[0].pk_post_id}`, JSON.stringify(filename), JSON.stringify(filename));
               return multi.exec();
             });
+            // logger.info(`success upload images to redis: ===>`);
           } catch (e5) {
+            // logger.info(`error upload images to redis: ===> ${e5}`);
             const deleteImages = await redisClient.del(`images:${details.rows[0].pk_post_id}`);
             if (deleteImages) return e5;
             return e5; // I'm not returning [null, e5] here coz its not the parent try catch its a child try catch. e5 error will be redirected
@@ -242,7 +263,7 @@ router.post(
         await Promise.all(uploadParams.map((params: any) => s3.upload(params).promise())).catch(async () => {
           // invalidate redis and database
           const rollbackPostgres = await db.query('ROLLBACK');
-          const deleteImagesRedis = await redisClient.del(`images:${uploadDetails.rows[0].pk_post_id}`);
+          const deleteImagesRedis = await redisClient.del(`images:${details.rows[0].pk_post_id}`);
           const deleteImages = uploadParams.map((params: any) => {
             const parameters = {
               Bucket: params.Bucket,
@@ -258,14 +279,19 @@ router.post(
           await Promise.allSettled([rollbackPostgres, deleteImagesRedis, deleteImages]);
           return [null, 'Error'];
         });
+        // logger.info(`Delete upload images to s3: ===>`);
         return ['Success', null];
       } catch (e3) {
         // if e4 or e5 is true it will be passed to e3...
+        // logger.info(`Error upload images to s3: ===> ${e3}`);
+
         return [null, e3]; // I only use return [null, e] in parent try catch, for child/nested try catch, its return e;
         // its because i'm using the data value i parent, I'm not using the datafrom child;
       }
     };
     const [postId, e1] = await uploadDetails(userId, username, title, storeName, ratings, category, overallRating);
+    // logger.info(`[postId, e1]: ===> ${postId}, ${e1}`);
+
     const [redisPostDetailsUpload, e2] = await uploadRedis(
       postId,
       userId,
@@ -276,9 +302,12 @@ router.post(
       category,
       overallRating,
     );
+    // logger.info(`[redisPostDetailsUpload, e2] : ===> ${redisPostDetailsUpload}, ${e2}`);
     const [successUpload, e3] = await uploadFiles(files, postId);
+    // logger.info(`[successUpload, e3] : ===> ${successUpload}, ${e3}`);
 
     if (postId && redisPostDetailsUpload && successUpload) {
+      // logger.info(`ALL SUCCESSFULLY UPLOADED`);
       return res.status(200).json({
         data: {
           userId: req.user.id,
@@ -286,6 +315,7 @@ router.post(
       });
     }
     if (e1 || e2 || e3) {
+      // logger.info(`3 errors ===. ${e1}, ${e2}, ${e3}`);
       if (e3) {
         await db.query('ROLLBACK');
         await redisClient.executeIsolated(async (isolatedClient) => {
@@ -299,10 +329,13 @@ router.post(
             .lRem(`user:list:${userId}`, 0, `${postId.rows[0].pk_post_id}`); // delete post from user post list
           return multi.exec();
         });
+        // logger.info(`2 errors ===. ${e1}, ${e2}, ${e3}`);
         return next(ApiError.internalError('Error'));
       }
+      // logger.info(`Other error`);
       return next(ApiError.internalError('Error'));
     }
+    // logger.info(`All Error`);
     return next(ApiError.internalError('Error'));
   },
 );

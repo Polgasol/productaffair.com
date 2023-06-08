@@ -1,0 +1,11 @@
+@use "../../../../styles/utilities" as u;
+
+.copyrights {
+  text-align: center;
+  width: u.toRem(208);
+margin: u.toRem(10) 0 0 0;
+  &__text {
+    color: var(--meta-data);
+    font-size: 0.8rem;
+  }
+}

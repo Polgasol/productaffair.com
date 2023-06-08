@@ -31,6 +31,7 @@ const authenticateUser = (req, username, password, done) => __awaiter(void 0, vo
         const verified = false;
         const about = '';
         const profImg = '';
+        const resendTries = 1;
         const salt = yield bcrypt_1.default.genSalt(12).catch(() => done(null, false, { message: 'Server Error' }));
         const isUserVerified = yield user_1.default.userEmailVerified(email).catch(() => done(null, false, { message: 'Server Error' }));
         const getUsername = yield user_1.default.getUsernameByEmail(email).catch(() => done(null, false, { message: 'Server Error' }));
@@ -66,6 +67,7 @@ const authenticateUser = (req, username, password, done) => __awaiter(void 0, vo
                             username,
                             email,
                             vcode: '',
+                            resendTries,
                             guest: false,
                             authtype,
                             verified,
@@ -109,6 +111,7 @@ const authenticateUser = (req, username, password, done) => __awaiter(void 0, vo
                             username,
                             email,
                             vcode: '',
+                            resendTries,
                             guest: false,
                             verified,
                             authtype,
@@ -134,7 +137,6 @@ const authenticateUser = (req, username, password, done) => __awaiter(void 0, vo
         }
         if (isUserVerified.rows[0]) {
             if (isUserVerified.rows[0].verified === true) {
-                console.log(`Already Exist: ${isUserVerified.rows[0].verified}`);
                 if (getUsername.rows[0]) {
                     return done(null, false, { message: 'Username already exist' });
                 }
@@ -162,4 +164,14 @@ passport_1.default.use('local-register', new LocalStrategy({
     passwordField: 'createPassword',
     passReqToCallback: true,
 }, authenticateUser));
+passport_1.default.serializeUser((user, done) => {
+    process.nextTick(() => {
+        done(null, user);
+    });
+});
+passport_1.default.deserializeUser((user, done) => __awaiter(void 0, void 0, void 0, function* () {
+    process.nextTick(() => {
+        done(null, user);
+    });
+}));
 //# sourceMappingURL=passport-local-register.js.map

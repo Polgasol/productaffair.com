@@ -1,0 +1,16 @@
+@use '../../../../styles//utilities/' as u;
+@import "../../../../styles/mixins.scss";
+@import "../../../../styles/variables.scss";
+
+.rating {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 u.toRem(5) 0 0;
+  &__text {
+    font-size: u.toRem(13);
+    color: var(--meta-data);
+    // font-weight: 600;
+    // color: var(--dark-text1);
+  }
+}

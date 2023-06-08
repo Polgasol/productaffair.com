@@ -38,11 +38,11 @@ router.post(
         return next(ApiError.internalError('Error Auth'));
       }
       req.user = user;
-      return req.login(user, (error: Error) => {
+      return req.login(user, async (error: Error) => {
         if (error) {
           return next(ApiError.internalError('Error Auth'));
         }
-        return req.session.save((erro: Error) => {
+        return req.session.save(async (erro: Error) => {
           if (erro) {
             return next(ApiError.internalError('Error Auth'));
           }
@@ -51,6 +51,7 @@ router.post(
       });
     })(req, res, next);
   },
+  // check if theres already a verification code that exist
   createCode,
 );
 

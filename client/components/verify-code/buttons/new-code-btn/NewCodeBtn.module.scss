@@ -1,0 +1,32 @@
+@use "../../../../styles/utilities" as u;
+
+.resend-code-link {
+  color: var(--blue);
+  font-size: u.toRem(13);
+  background-color: transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+}
+.new-code-div {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: row;
+  width: 100%;
+  margin: 0 0 u.toRem(8) 0;
+}
+.resend-timeLeft {
+  color: var(--meta-data);
+  margin-left: u.toRem(8);
+  font-size: u.toRem(13);
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: u.toRem(8);
+}

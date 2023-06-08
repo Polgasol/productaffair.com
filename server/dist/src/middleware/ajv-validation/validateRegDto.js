@@ -9,9 +9,7 @@ const validateReg = (ajvValidate) => {
         const validAjv = ajvValidate(req.body);
         if (!validAjv) {
             const { errors } = ajvValidate;
-            console.log('AJV ERROR');
-            console.log(errors);
-            next(apiError_1.default.badRequest(`Invalid`));
+            next(apiError_1.default.badRequest(`${errors}`));
         }
         else {
             next();

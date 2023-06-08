@@ -43,17 +43,17 @@ router.post('/', (0, validateRegDto_1.default)(auth_1.ajvValidateReg), authCheck
             return next(apiError_1.default.internalError('Error Auth'));
         }
         req.user = user;
-        return req.login(user, (error) => {
+        return req.login(user, (error) => __awaiter(void 0, void 0, void 0, function* () {
             if (error) {
                 return next(apiError_1.default.internalError('Error Auth'));
             }
-            return req.session.save((erro) => {
+            return req.session.save((erro) => __awaiter(void 0, void 0, void 0, function* () {
                 if (erro) {
                     return next(apiError_1.default.internalError('Error Auth'));
                 }
                 return next();
-            });
-        });
+            }));
+        }));
     }))(req, res, next);
 }, verifyCode_1.createCode);
 exports.default = router;

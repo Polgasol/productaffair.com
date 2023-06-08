@@ -1,8 +1,8 @@
 {
-  "watch": ["src", "index.ts"],
+  "watch": ["src", "app.ts"],
   "ext": "ts,json,js",
   "ignore": ["node_modules", "coverage", "dist"],
-  "exec": "ts-node -r tsconfig-paths/register index.ts",
+  "exec": "ts-node -r tsconfig-paths/register app.ts",
   "restartable": "rs",
   "env": {
     "NODE_ENV": "development"

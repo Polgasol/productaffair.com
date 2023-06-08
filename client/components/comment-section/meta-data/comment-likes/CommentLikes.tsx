@@ -1,0 +1,29 @@
+import React, { FC } from "react";
+import styles from "./CommentLikes.module.scss";
+
+type commentLikesCount = {
+  likesCount: number;
+};
+const CommentLikes = ({ likesCount }: commentLikesCount) => {
+  // if the immediate data is still on the page, do not request for the same comment
+  const toNum: number = likesCount;
+  const likesFormat = (num: number) => {
+    if (Math.abs(num) < 1000) return Math.sign(num) * num;
+    if (Math.abs(num) > 999 && Math.abs(num) < 1000000)
+      return Math.sign(num) * Math.round(Math.abs(num) / 1000) + "K";
+    if (Math.abs(num) > 999999 && Math.abs(num) < 1000000000)
+      return Math.sign(num) * Math.round(Math.abs(num) / 1000000) + "M";
+    if (Math.abs(num) > 999999999 && Math.abs(num) < 1000000000000)
+      return Math.sign(num) * Math.round(Math.abs(num) / 1000000000) + "B";
+
+    return Math.sign(num) * Math.round(Math.abs(num) / 1000000000000) + "T";
+  };
+  const result = likesFormat(toNum);
+  return (
+    <div className={styles["comment-likes"]}>
+      <span className={styles["comment-likes__text"]}>{result} Likes</span>
+    </div>
+  );
+};
+
+export default CommentLikes;

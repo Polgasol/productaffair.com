@@ -4,9 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const nodemailer_1 = __importDefault(require("nodemailer"));
-const index_1 = __importDefault(require("../logger/index"));
 const sendEmail = (firstname, email, token) => {
-    index_1.default.info('Nodemailer has successfully send the verification code');
     const transporter = nodemailer_1.default.createTransport({
         pool: true,
         maxConnections: 3,
@@ -23,7 +21,7 @@ const sendEmail = (firstname, email, token) => {
     const mailOptions = {
         from: 'productaffair@productaffair.com',
         to: email,
-        subject: 'ProductAffair - Verify Email',
+        subject: process.env.NODE_ENV === 'production' ? 'ProductAffair - Verify Email' : 'Test Email',
         html: `<h4>Hi ${firstname}, you have successfully created a Productaffair account! Please enter the code below to verify your email address.</h4>
              <p>${token}</p>`,
     };

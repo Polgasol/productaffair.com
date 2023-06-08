@@ -1,0 +1,17 @@
+@import '../../../../styles/mixins.scss';
+@use '../../../../styles/utilities' as u;
+
+.menu-btn {
+  margin-left: 1.00rem;
+  &__btn {
+      background-color: Transparent;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  outline: none;
+  color: var(--red);
+  font-size: u.font-size(s);
+  height: 100%;
+  font-size: u.font-size(s);
+  border: none;
+  }
+}

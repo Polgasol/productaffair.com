@@ -89,7 +89,6 @@ const verifyCodeSchema = {
       type: 'string',
       minLength: 8,
       maxLength: 8,
-      pattern: '^(?=.{1,8}$)(?:[0-9a-zA-Zd]+(?:[0-9a-zA-Zd])*)+$',
     },
   },
   required: ['verificationCode'],
@@ -108,7 +107,7 @@ const loginSchema = {
       type: 'string',
       minLength: 1,
       maxLength: 100,
-      pattern: '^(?=.{1,100}$)(?:[a-zA-Zd]+(?:[_][a-zA-Zd])*)+$',
+      pattern: '^(?=.{1,100}$)(?:[0-9a-zA-Zd]+(?:[_][0-9a-zA-Zd])*)+$',
     },
     password: {
       type: 'string',
@@ -135,13 +134,13 @@ const uploadSchema = {
       type: 'string',
       minLength: 1,
       maxLength: 100,
-      pattern: '^[A-Za-z0-9+!?,.:;()@#s ]{1,100}$',
+      pattern: '^[A-Za-z0-9+!?_/&$%-*^"><,.:;()@#s ]{1,100}$',
     },
     storeName: {
       type: 'string',
       minLength: 1,
       maxLength: 100,
-      pattern: '^[A-Za-z0-9+!?,.:;()@#s ]{1,100}$',
+      pattern: '^[A-Za-z0-9+!?_/&$%-*^"><,.:;()@#s ]{1,100}$',
     },
     ratings: {
       type: 'array',
@@ -218,16 +217,23 @@ const validateGoogleUsername = {
 const sanitizeComments = {
   type: 'object',
   properties: {
+    id: {
+      type: 'string',
+      minLength: 1,
+      maxLength: 1000000000000000,
+      pattern: '^[0-9]{1,1000000000000000}$',
+    },
     commentText: {
       type: 'string',
       minLength: 1,
       maxLength: 500,
     },
   },
-  required: ['commentText'],
+  required: ['id', 'commentText'],
   additionalProperties: false,
   errorMessage: {
     properties: {
+      id: '404',
       commentText: '404',
     },
   },
@@ -258,6 +264,7 @@ const searchSchema = {
       type: 'string',
       minLength: 1,
       maxLength: 1000,
+      // eslint-disable-next-line no-useless-escape
       pattern: `^[A-Za-z0-9+!?,.:;()@#\s ]{1,1000}$`, // before ^[A-Za-z0-9+!?,.":;()@$&#-_=+%\s]{1,5}$
     },
     page: {
@@ -288,6 +295,24 @@ const postIdSchema = {
     },
   },
   required: ['postId'],
+  additionalProperties: false,
+  errorMessage: {
+    properties: {
+      postId: '404',
+    },
+  },
+};
+
+const commentIdSchema = {
+  type: 'object',
+  properties: {
+    commentId: {
+      type: 'number',
+      minimum: 0,
+      maximum: 1000000000000000,
+    },
+  },
+  required: ['commentId'],
   additionalProperties: false,
   errorMessage: {
     properties: {
@@ -375,6 +400,32 @@ const aboutSchema = {
   },
 };
 
+const getCommentsUrlSchema = {
+  type: 'object',
+  properties: {
+    postId: {
+      type: 'string',
+      minLength: 1,
+      maxLength: 1000000000000000,
+      pattern: '^[0-9]{1,1000000000000000}$',
+    },
+    page: {
+      type: 'string',
+      minLength: 1,
+      maxLength: 5,
+      pattern: '^[0-9]{1,5}$',
+    },
+  },
+  required: ['postId', 'page'],
+  additionalProperties: false,
+  errorMessage: {
+    properties: {
+      postId: '404',
+      page: '404',
+    },
+  },
+};
+
 const ajvValidateReg = ajvInstance.compile(registerSchema);
 const ajvVerifyCode = ajvInstance.compile(verifyCodeSchema);
 const ajvValidateLogin = ajvInstance.compile(loginSchema);
@@ -388,6 +439,9 @@ const ajvValidateGetCategories = ajvInstance.compile(getCategoriesSchema);
 const ajvValidateFollow = ajvInstance.compile(userIdSchema);
 const ajvValidateLike = ajvInstance.compile(postIdSchema);
 const ajvValidateAbout = ajvInstance.compile(aboutSchema);
+const ajvValidateGetComments = ajvInstance.compile(getCommentsUrlSchema);
+const ajvValidateCommentLike = ajvInstance.compile(commentIdSchema);
+const ajvValidateCommentDelete = ajvInstance.compile(commentIdSchema);
 
 export {
   ajvValidateReg,
@@ -403,4 +457,7 @@ export {
   ajvValidateFollow,
   ajvValidateLike,
   ajvValidateAbout,
+  ajvValidateGetComments,
+  ajvValidateCommentLike,
+  ajvValidateCommentDelete,
 };

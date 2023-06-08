@@ -1,0 +1,23 @@
+@use "../../styles/utilities" as u;
+
+.nav-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  // height: u.toRem(65);
+  height: u.toRem(45);
+  background-color: var(--blue);
+  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.3);
+
+  @include u.breakpoint(m) {
+    flex-direction: row;
+    height: u.toRem(55);
+  }
+  &__logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

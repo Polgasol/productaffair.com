@@ -1,0 +1,21 @@
+@use '../../../../styles/utilities/' as u;
+
+.search-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 0.50rem;
+  background-color: var(--yellow);
+  cursor: pointer;
+  outline: none;
+  //color: var(--white);
+  height: 100%;
+  width: 5.00rem;
+  // border-top-right-radius: 0.30rem;
+  // border-bottom-right-radius: 0.30rem;
+  background-repeat: no-repeat;
+  border: none;
+}
+.icon {
+  color: var(--dark-text1);
+}

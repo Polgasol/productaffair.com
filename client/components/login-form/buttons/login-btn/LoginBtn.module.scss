@@ -1,0 +1,22 @@
+@import '../../../../styles/mixins.scss';
+@import '../../../../styles/variables.scss';
+
+.login-con {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+.login-btn-con {
+  display: flex;
+  justify-content: center;
+  margin: 0 0 1rem 0;
+  width: 10rem;
+}
+.google-login-con {
+  display: flex;
+  justify-content: center;
+  width: 10rem;
+  margin: 0 0 1rem 0;
+}

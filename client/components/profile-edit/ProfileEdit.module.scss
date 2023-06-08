@@ -1,0 +1,107 @@
+@use "../../styles/utilities/" as u;
+
+.modal-form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: u.toRem(500);
+  width: u.toRem(300);
+  min-width: u.toRem(260);
+  max-height: u.toRem(500);
+  // border: 2px solid #000;
+  border-radius: u.toRem(8);
+  box-shadow: 24;
+  background-color: var(--white);
+  outline: none;
+  padding: u.toRem(20);
+
+  @include u.breakpoint(sm) {
+      width: u.toRem(500);
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+  &__profile-pic {
+    background-color: var(--white);
+    border-radius: u.toRem(8);
+    border: 1px solid var(--gray);
+    width: u.toRem(150);
+    height: u.toRem(150);
+    padding: u.toRem(3);
+  }
+  &__profile {
+    background-color: var(--gray);
+    border-radius: u.toRem(5);
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  &__tile {
+    color: var(--gray);
+    width: 100%;
+    height: 100%;
+    border-radius: u.toRem(5);
+    display: flex;
+    justify-content: center;
+    min-width: 0;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  &__img-preview {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: u.toRem(5);
+
+  }
+  
+  &__about {
+    margin-top: u.toRem(30);
+    width: 100%;
+  }
+  &__about-textarea {
+    //border: none;
+    padding: u.toRem(10);
+    outline: none;
+    width: 100%;
+    height: u.toRem(100);
+    resize: none;
+    font-size: u.toRem(16);
+  }
+  &__about-text {
+    font-weight: 600;
+    color: var(--dark-text1);
+  }
+  &__about-input-container {
+    width: 100%;
+    margin: 0 0 u.toRem(10) 0;
+  }
+  &__container {
+    width: 100%;
+    margin-bottom: u.toRem(10);
+
+  }
+  &__input-limit-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+  &__input-limit-text-container {
+    color: var(--meta-data);
+    font-size: u.toRem(14);
+  }
+}
+
+.upload-btn-con{
+  width: 100%;
+  display: flex; 
+  justify-content: center;
+}

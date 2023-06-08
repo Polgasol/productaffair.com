@@ -87,7 +87,7 @@ router.get('/', (req, res, next) => {
         if (result) {
             return res.status(200).json({ data: yield Promise.all(searchResults.reverse()) });
         }
-        return next(apiError_1.default.internalError('Error'));
+        return res.status(200).json({ data: 'No posts are available' });
     }
     catch (e) {
         return next(apiError_1.default.internalError('Error'));

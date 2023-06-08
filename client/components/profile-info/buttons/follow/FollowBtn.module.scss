@@ -1,0 +1,36 @@
+@use '../../../../styles/utilities/' as u;
+
+.follow-btn {
+  background: transparent;
+
+  &__btn {
+  background-color: var(--blue);
+  cursor: pointer;
+  outline: none;
+  color: var(--white);
+  font-size:  0.90rem;
+  height: 100%;
+  width: 5.00rem;
+  // border-radius: 0.30rem;
+  background-repeat: no-repeat;
+  border: none;
+  padding: 0.50rem 0.50rem 0.50rem 0.50rem;
+  }
+}
+.unfollow-btn {
+  background: transparent;
+
+  &__btn {
+  background-color: var(--gray);
+  cursor: pointer;
+  outline: none;
+  color: var(--white);
+  font-size:  0.90rem;
+  height: 2.5rem;
+  width: 5.00rem;
+  border-radius: 0.30rem;
+  background-repeat: no-repeat;
+  border: none;
+  padding: 0.50rem 0.50rem 0.50rem 0.50rem;
+  }
+}

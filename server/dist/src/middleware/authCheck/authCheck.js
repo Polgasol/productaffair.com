@@ -12,8 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authCheckMwDeletePost = exports.authCheckMwUnlike = exports.authCheckMwLike = exports.authCheckMwVerify = exports.authCheckMwRegister = exports.authCheckMwProfileInfo = exports.authCheckMwLogin = exports.authCheckMw = exports.authCheck = void 0;
+exports.authCheckDeleteComments = exports.authCheckMwComments = exports.authCheckMwDeletePost = exports.authCheckMwUnlike = exports.authCheckMwLike = exports.authCheckMwVerify = exports.authCheckMwRegister = exports.authCheckMwProfileInfo = exports.authCheckMwLogin = exports.authCheckMw = exports.authCheck = void 0;
 const apiError_1 = __importDefault(require("../api-error-handler/apiError"));
+const pool_1 = __importDefault(require("../../pool/pool"));
 const redis_1 = __importDefault(require("../../models/redis/redis"));
 const authCheck = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.user) {
@@ -88,7 +89,6 @@ const authCheckMw = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
     if (req.user) {
         if ((req.user.authtype === 'local' && req.user.verified === true) ||
             (req.user.authtype === 'google' && req.user.verified === true)) {
-            console.log('HERE AT AUTHCHECKMW');
             return next();
         }
         if (req.user.authtype === 'google' && req.user.verified === false) {
@@ -499,4 +499,125 @@ const authCheckMwUnlike = (req, res, next) => __awaiter(void 0, void 0, void 0, 
     });
 });
 exports.authCheckMwUnlike = authCheckMwUnlike;
+const authCheckMwComments = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    if (req.user) {
+        if ((req.user.authtype === 'local' && req.user.verified === true) ||
+            (req.user.authtype === 'google' && req.user.verified === true)) {
+            return next();
+        }
+        if (req.user.authtype === 'google' && req.user.verified === false) {
+            return res.status(200).json({
+                data: {
+                    auth: {
+                        verified: req.user.verified,
+                        type: req.user.authtype,
+                    },
+                    user: {
+                        id: req.user.id,
+                        username: null,
+                        guest: req.user.guest,
+                        timezone: req.user.tz,
+                    },
+                },
+            });
+        }
+        if (req.user.authtype === 'local' && req.user.verified === false) {
+            return res.status(200).json({
+                data: {
+                    auth: {
+                        verified: req.user.verified,
+                        type: req.user.authtype,
+                    },
+                    user: {
+                        id: req.user.id,
+                        username: req.user.username,
+                        guest: req.user.guest,
+                        timezone: req.user.tz,
+                    },
+                },
+            });
+        }
+        return next(apiError_1.default.internalError('Error'));
+    }
+    return res.status(200).json({
+        data: {
+            auth: {
+                verified: req.session.guestuser.verified,
+                type: req.session.guestuser.type,
+            },
+            user: {
+                id: req.session.guestuser.guestId,
+                username: null,
+                guest: req.session.guestuser.guest,
+                timezone: req.session.guestuser.tz,
+            },
+        },
+    });
+});
+exports.authCheckMwComments = authCheckMwComments;
+const authCheckDeleteComments = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    if (req.user) {
+        if ((req.user.authtype === 'local' && req.user.verified === true) ||
+            (req.user.authtype === 'google' && req.user.verified === true)) {
+            const { commentId } = req.body;
+            const checkIfAuthor = yield pool_1.default.query(`SELECT * FROM comments WHERE fk_commenter_id=$1 AND pk_comments_id=$2`, [
+                Number(req.user.id),
+                commentId,
+            ]);
+            if (((_a = checkIfAuthor.rows[0]) === null || _a === void 0 ? void 0 : _a.fk_commenter_id) === Number(req.user.id)) {
+                return next();
+            }
+            return next(apiError_1.default.internalError('Error'));
+        }
+        if (req.user.authtype === 'google' && req.user.verified === false) {
+            return res.status(200).json({
+                data: {
+                    auth: {
+                        verified: req.user.verified,
+                        type: req.user.authtype,
+                    },
+                    user: {
+                        id: req.user.id,
+                        username: null,
+                        guest: req.user.guest,
+                        timezone: req.user.tz,
+                    },
+                },
+            });
+        }
+        if (req.user.authtype === 'local' && req.user.verified === false) {
+            return res.status(200).json({
+                data: {
+                    auth: {
+                        verified: req.user.verified,
+                        type: req.user.authtype,
+                    },
+                    user: {
+                        id: req.user.id,
+                        username: req.user.username,
+                        guest: req.user.guest,
+                        timezone: req.user.tz,
+                    },
+                },
+            });
+        }
+        return next(apiError_1.default.internalError('Error'));
+    }
+    return res.status(200).json({
+        data: {
+            auth: {
+                verified: req.session.guestuser.verified,
+                type: req.session.guestuser.type,
+            },
+            user: {
+                id: req.session.guestuser.guestId,
+                username: null,
+                guest: req.session.guestuser.guest,
+                timezone: req.session.guestuser.tz,
+            },
+        },
+    });
+});
+exports.authCheckDeleteComments = authCheckDeleteComments;
 //# sourceMappingURL=authCheck.js.map

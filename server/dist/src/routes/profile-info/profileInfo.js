@@ -40,7 +40,7 @@ const limits = {
     files: 1,
 };
 const upload = (0, multer_1.default)({ fileFilter, limits }).array('image', 2);
-router.get('/', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const bucketName = process.env.AWS_S3_BUCKET_NAME;
     const s3 = new aws_sdk_1.S3();
     const { user } = req.query;
@@ -54,7 +54,7 @@ router.get('/', (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
     ]);
     const [userId, username, about, followers, profileImg, postCount] = getProfileInfo;
     const profileImgUrl = (image) => __awaiter(void 0, void 0, void 0, function* () {
-        if (image !== '""') {
+        if (image !== '""' && image !== '') {
             const signedUrl = yield s3.getSignedUrlPromise('getObject', {
                 Bucket: bucketName,
                 Key: `imageuploads/${image}`,
@@ -82,9 +82,9 @@ router.get('/', (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         }
         return 'Guest';
     });
-    const checkIfAlreadyFollowed = () => __awaiter(void 0, void 0, void 0, function* () {
+    const checkIfAlreadyFollowed = (usersId) => __awaiter(void 0, void 0, void 0, function* () {
         if (req.user) {
-            const check = yield redis_1.default.v4.hGet(`followers:user:${userId}`, req.user.id);
+            const check = yield redis_1.default.v4.hGet(`followers:user:${usersId}`, req.user.id);
             if (!check) {
                 return '!Following';
             }
@@ -93,21 +93,21 @@ router.get('/', (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         return 'Guest';
     });
     return res.status(200).json({
-        data: Object.assign(Object.assign({}, dataInfo), { isAuthor: yield checkIfAuthor(), isFollowing: yield checkIfAlreadyFollowed() }),
+        data: Object.assign(Object.assign({}, dataInfo), { isAuthor: yield checkIfAuthor(), isFollowing: yield checkIfAlreadyFollowed(userId) }),
     });
 }));
 router.post('/', upload, authCheck_1.authCheckMwProfileInfo, (0, validateRegDto_1.default)(auth_1.ajvValidateAbout), (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { files } = req;
     const { about } = req.body;
     const userId = req.user.id;
-    const uploadToServer = (files, userId, about) => __awaiter(void 0, void 0, void 0, function* () {
+    const uploadToServer = (filesToUpload, usersID, aboutText) => __awaiter(void 0, void 0, void 0, function* () {
         const bucketName = process.env.AWS_S3_BUCKET_NAME;
         const s3 = new aws_sdk_1.S3();
         try {
             yield pool_1.default.query('BEGIN');
-            yield pool_1.default.query(`UPDATE users SET about=$1 WHERE pk_users_id=$2`, [about, userId]);
+            yield pool_1.default.query(`UPDATE users SET about=$1 WHERE pk_users_id=$2`, [aboutText, usersID]);
             yield pool_1.default.query('COMMIT');
-            const uploadParams = files.map((file) => {
+            const uploadParams = filesToUpload.map((file) => {
                 const appendFileName = (0, nanoid_1.nanoid)(64);
                 const fileName = appendFileName + file.originalname;
                 const checkFileExtension = file.originalname.slice(((file.originalname.lastIndexOf('.') - 1) >>> 0) + 2);
@@ -131,7 +131,7 @@ router.post('/', upload, authCheck_1.authCheckMwProfileInfo, (0, validateRegDto_
                 const filename = params.Key.substring(13, params.Key.length - 0);
                 try {
                     yield pool_1.default.query('BEGIN');
-                    yield pool_1.default.query(`UPDATE users SET profile_img_url=$1 WHERE pk_users_id=$2`, [filename, userId]);
+                    yield pool_1.default.query(`UPDATE users SET profile_img_url=$1 WHERE pk_users_id=$2`, [filename, usersID]);
                     yield pool_1.default.query('COMMIT');
                 }
                 catch (e) {
@@ -140,22 +140,22 @@ router.post('/', upload, authCheck_1.authCheckMwProfileInfo, (0, validateRegDto_
                 }
                 try {
                     yield redis_1.default.executeIsolated((isolatedClient) => __awaiter(void 0, void 0, void 0, function* () {
-                        yield isolatedClient.watch(`user:${userId}`);
+                        yield isolatedClient.watch(`user:${usersID}`);
                         const multi = isolatedClient
                             .multi()
-                            .hSet(`user:${userId}`, 'profile_img_src', `${filename}`)
-                            .hSet(`user:${userId}`, 'about', `${about}`);
+                            .hSet(`user:${usersID}`, 'profile_img_src', `${filename}`)
+                            .hSet(`user:${usersID}`, 'about', `${aboutText}`);
                         return multi.exec();
                     }));
                 }
                 catch (e) {
                     yield pool_1.default.query('ROLLBACK');
                     yield redis_1.default.executeIsolated((isolatedClient) => __awaiter(void 0, void 0, void 0, function* () {
-                        yield isolatedClient.watch(`user:${userId}`);
+                        yield isolatedClient.watch(`user:${usersID}`);
                         const multi = isolatedClient
                             .multi()
-                            .hSet(`user:${userId}`, 'profile_img_src', ``)
-                            .hSet(`user:${userId}`, 'about', ``);
+                            .hSet(`user:${usersID}`, 'profile_img_src', ``)
+                            .hSet(`user:${usersID}`, 'about', ``);
                         return multi.exec();
                     }));
                     return e;
@@ -165,11 +165,11 @@ router.post('/', upload, authCheck_1.authCheckMwProfileInfo, (0, validateRegDto_
                 if (e) {
                     const rollbackPostgres = yield pool_1.default.query('ROLLBACK');
                     const deleteImagesRedis = yield redis_1.default.executeIsolated((isolatedClient) => __awaiter(void 0, void 0, void 0, function* () {
-                        yield isolatedClient.watch(`user:${userId}`);
+                        yield isolatedClient.watch(`user:${usersID}`);
                         const multi = isolatedClient
                             .multi()
-                            .hSet(`user:${userId}`, 'profile_img_src', ``)
-                            .hSet(`user:${userId}`, 'about', ``);
+                            .hSet(`user:${usersID}`, 'profile_img_src', ``)
+                            .hSet(`user:${usersID}`, 'about', ``);
                         return multi.exec();
                     }));
                     const deleteImages = uploadParams.map((params) => {
@@ -177,7 +177,7 @@ router.post('/', upload, authCheck_1.authCheckMwProfileInfo, (0, validateRegDto_
                             Bucket: params.Bucket,
                             Key: params.Key,
                         };
-                        s3.deleteObject(parameters, (err, data) => {
+                        s3.deleteObject(parameters, (err) => {
                             if (err) {
                                 return [null, err];
                             }

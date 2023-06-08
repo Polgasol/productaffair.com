@@ -1,0 +1,15 @@
+@use "../../../../styles/utilities/" as u;
+
+.likes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 u.toRem(10) 0 0;
+  &__text {
+    color: var(--meta-data);
+    font-size: u.toRem(12);
+    @include u.breakpoint(xs) {
+      font-size: u.toRem(16);
+    }
+  }
+}

@@ -1,8 +1,7 @@
 import nodemailer from 'nodemailer';
-import logger from '../logger/index';
+// import logger from '../logger/index';
 
 const sendEmail = (firstname: string, email: string | undefined, token: any) => {
-  logger.info('Nodemailer has successfully send the verification code');
   // https://docs.microsoft.com/en-us/exchange/troubleshoot/send-emails/smtp-submission-improvements#new-throttling-limit-for-concurrent-connections-that-submitmessages
   // The service has various limits to prevent abuse and to ensure fair use.
   // An additional limit is being added. Under the new limit, up to three concurrent connections are allowed
@@ -36,7 +35,7 @@ const sendEmail = (firstname: string, email: string | undefined, token: any) => 
   const mailOptions = {
     from: 'productaffair@productaffair.com',
     to: email,
-    subject: 'ProductAffair - Verify Email',
+    subject: process.env.NODE_ENV === 'production' ? 'ProductAffair - Verify Email' : 'Test Email',
     html: `<h4>Hi ${firstname}, you have successfully created a Productaffair account! Please enter the code below to verify your email address.</h4>
              <p>${token}</p>`,
   };

@@ -12,9 +12,7 @@ const validateReg = (ajvValidate: any) => {
     if (!validAjv) {
       // if ajvInstance.compile(schema) = not true then show the errors
       const { errors } = ajvValidate;
-      console.log('AJV ERROR');
-      console.log(errors);
-      next(ApiError.badRequest(`Invalid`));
+      next(ApiError.badRequest(`${errors}`));
     } else {
       next();
     }

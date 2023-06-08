@@ -6,14 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const passport_1 = __importDefault(require("passport"));
 const apiError_1 = __importDefault(require("../../middleware/api-error-handler/apiError"));
-const index_1 = __importDefault(require("../../logger/index"));
 const router = express_1.default.Router();
 router.get('/google', (req, res, next) => {
-    index_1.default.info(`GOOGLE ROUTE GET REQUEST`);
     if (req.user) {
         if ((req.user.authtype === 'local' && req.user.verified === true) ||
             (req.user.authtype === 'google' && req.user.verified === true)) {
-            index_1.default.info('redirect to /home');
             return res.status(200).json({
                 data: {
                     verified: true,
@@ -26,7 +23,6 @@ router.get('/google', (req, res, next) => {
             return req.session.save(req.sessionID, (err) => {
                 if (err)
                     return next(apiError_1.default.internalError('Error'));
-                index_1.default.info(`Unverified GOOGLE is now deleted`);
                 return next();
             });
         }
@@ -35,7 +31,6 @@ router.get('/google', (req, res, next) => {
             return req.session.save(req.sessionID, (err) => {
                 if (err)
                     return next(apiError_1.default.internalError('Error'));
-                index_1.default.info(`Unverified LOCAL is now deleted`);
                 return next();
             });
         }

@@ -21,9 +21,11 @@ router.get('/', (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
     const { user, page } = req.query;
     const s3 = new aws_sdk_1.S3();
     const bucketName = process.env.AWS_S3_BUCKET_NAME;
-    const start = 0 + page * 24;
-    const end = 23 + page * 24;
-    const checkIfUserListExist = yield redis_1.default.v4.exists(`user:list:${user}`);
+    const start = 0 + parseInt(page) * 24;
+    const end = 23 + parseInt(page) * 24;
+    const checkIfUserListExist = yield redis_1.default.v4.exists(`user:list:${user}`).catch(() => {
+        return res.status(200).json({ data: undefined });
+    });
     if (checkIfUserListExist) {
         const getPostKeys = yield redis_1.default.v4.lRange(`user:list:${user}`, start, end);
         const getPostData = getPostKeys.map((keys) => __awaiter(void 0, void 0, void 0, function* () {
@@ -78,7 +80,7 @@ router.get('/', (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         }
         return res.status(200).json({ data: yield Promise.all(getPostData) });
     }
-    return next(apiError_1.default.internalError('Error'));
+    return res.status(200).json({ data: 'No posts are available' });
 }));
 exports.default = router;
 //# sourceMappingURL=profile.js.map

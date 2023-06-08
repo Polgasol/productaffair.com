@@ -1,0 +1,8 @@
+@use "../../../../styles/utilities/" as u;
+
+.help {
+  &__link {
+    font-size: 1rem;
+    color: var(--dark-text1);
+  }
+}

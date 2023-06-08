@@ -1,0 +1,10 @@
+@use '../../../../styles/utilities/' as u;
+
+.username {
+
+  &__text {
+    font-size: u.toRem(22);
+    font-weight: 600;
+    color: var(--dark-text1);
+  }
+}

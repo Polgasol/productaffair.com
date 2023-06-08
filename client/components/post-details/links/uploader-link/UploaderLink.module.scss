@@ -1,0 +1,18 @@
+@import "../../../../styles/mixins.scss";
+@import "../../../../styles/variables.scss";
+
+.uploader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &__link {
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  &__text {
+    font-size: 1rem;
+    color: var(--dark-text1);
+    font-weight: 600;
+  }
+}

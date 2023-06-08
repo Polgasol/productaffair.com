@@ -1,0 +1,15 @@
+@use '../../../../styles/utilities/' as u; 
+@import "../../.././../styles/mixins.scss";
+@import "../../.././../styles/variables.scss";
+
+.by {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &__label {
+    font-style: italic;
+    font-size: 0.8rem;
+    color: var(--meta-data);
+    margin-right: u.toRem(5);
+  }
+}

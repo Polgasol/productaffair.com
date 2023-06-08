@@ -30,7 +30,7 @@ const limits = {
 const upload = multer({ fileFilter, limits }).array('image', 2);
 
 // =================================================================================================================>
-router.get('/', async (req: any, res: any, next: any) => {
+router.get('/', async (req: any, res: any) => {
   const bucketName = process.env.AWS_S3_BUCKET_NAME as string;
   const s3 = new S3();
   const { user } = req.query;
@@ -44,7 +44,7 @@ router.get('/', async (req: any, res: any, next: any) => {
   ]);
   const [userId, username, about, followers, profileImg, postCount] = getProfileInfo; // assigns the array values to variables
   const profileImgUrl = async (image: any) => {
-    if (image !== '""') {
+    if (image !== '""' && image !== '') {
       const signedUrl = await s3.getSignedUrlPromise('getObject', {
         Bucket: bucketName,
         Key: `imageuploads/${image}`, // from redis image url
@@ -76,9 +76,9 @@ router.get('/', async (req: any, res: any, next: any) => {
     return 'Guest';
   };
 
-  const checkIfAlreadyFollowed = async () => {
+  const checkIfAlreadyFollowed = async (usersId: any) => {
     if (req.user) {
-      const check = await redisClient.v4.hGet(`followers:user:${userId}`, req.user.id);
+      const check = await redisClient.v4.hGet(`followers:user:${usersId}`, req.user.id);
 
       if (!check) {
         return '!Following';
@@ -92,7 +92,7 @@ router.get('/', async (req: any, res: any, next: any) => {
     data: {
       ...dataInfo,
       isAuthor: await checkIfAuthor(),
-      isFollowing: await checkIfAlreadyFollowed(),
+      isFollowing: await checkIfAlreadyFollowed(userId),
     },
   });
 
@@ -141,23 +141,24 @@ router.post(
     const { files } = req;
     const { about } = req.body;
     const userId = req.user.id; // req.user.id, iuupload nya sa sarili nyang profile mismo
-
-    const uploadToServer = async (files: any, userId: any, about: any) => {
+    // files, userId, about
+    const uploadToServer = async (filesToUpload: any, usersID: any, aboutText: any) => {
       const bucketName = process.env.AWS_S3_BUCKET_NAME as string;
       const s3 = new S3();
       try {
         /* -------------POSTGRES UPLOAD ABOUT TO USERS TABLE-------------------------*/
         await db.query('BEGIN');
-        await db.query(`UPDATE users SET about=$1 WHERE pk_users_id=$2`, [about, userId]); // function 1
+        await db.query(`UPDATE users SET about=$1 WHERE pk_users_id=$2`, [aboutText, usersID]); // function 1
         await db.query('COMMIT');
 
         /* -------------POSTGRES UPLOAD ABOUT TO USERS TABLE-------------------------*/
 
         /* -------------CREATING UPLOAD PARAMETERS FOR S3 UPLOADS--------------------------------------------*/
-        const uploadParams = files.map((file: any) => {
+        const uploadParams = filesToUpload.map((file: any) => {
           const appendFileName = nanoid(64); // 32 characters append to file original filename.
           const fileName = appendFileName + file.originalname;
           // https://stackoverflow.com/questions/190852/how-can-i-get-file-extensions-with-javascript
+          // eslint-disable-next-line no-bitwise
           const checkFileExtension = file.originalname.slice(((file.originalname.lastIndexOf('.') - 1) >>> 0) + 2);
           if (
             checkFileExtension === 'jpeg' ||
@@ -182,12 +183,13 @@ router.post(
 
         /* -------------UPLOADING IMAGE PATH TO REDIS AND POSTGRES------------------------------------------*/
 
+        // eslint-disable-next-line consistent-return
         uploadParams.map(async (params: any) => {
           const filename = params.Key.substring(13, params.Key.length - 0); // use replace if you know what string already to be replaced by empty string
           // use slice if you dont know what digits, characters to be removed
           try {
             await db.query('BEGIN');
-            await db.query(`UPDATE users SET profile_img_url=$1 WHERE pk_users_id=$2`, [filename, userId]);
+            await db.query(`UPDATE users SET profile_img_url=$1 WHERE pk_users_id=$2`, [filename, usersID]);
             await db.query('COMMIT');
           } catch (e) {
             await db.query('ROLLBACK');
@@ -195,21 +197,21 @@ router.post(
           }
           try {
             await redisClient.executeIsolated(async (isolatedClient) => {
-              await isolatedClient.watch(`user:${userId}`);
+              await isolatedClient.watch(`user:${usersID}`);
               const multi = isolatedClient
                 .multi()
-                .hSet(`user:${userId}`, 'profile_img_src', `${filename}`)
-                .hSet(`user:${userId}`, 'about', `${about}`);
+                .hSet(`user:${usersID}`, 'profile_img_src', `${filename}`)
+                .hSet(`user:${usersID}`, 'about', `${aboutText}`);
               return multi.exec();
             });
           } catch (e) {
             await db.query('ROLLBACK');
             await redisClient.executeIsolated(async (isolatedClient) => {
-              await isolatedClient.watch(`user:${userId}`);
+              await isolatedClient.watch(`user:${usersID}`);
               const multi = isolatedClient
                 .multi()
-                .hSet(`user:${userId}`, 'profile_img_src', ``)
-                .hSet(`user:${userId}`, 'about', ``);
+                .hSet(`user:${usersID}`, 'profile_img_src', ``)
+                .hSet(`user:${usersID}`, 'about', ``);
               return multi.exec();
             });
             return e;
@@ -218,23 +220,25 @@ router.post(
         /* -------------UPLOADING IMAGE PATH TO REDIS AND POSTGRES------------------------------------------*/
 
         /* -------------UPLOADING IMAGE THE MAIN FILE ITSELF TO AWS S3------------------------------------------*/
+        // eslint-disable-next-line consistent-return
         await Promise.all(uploadParams.map((params: any) => s3.upload(params).promise())).catch(async (e: any) => {
           if (e) {
             const rollbackPostgres = await db.query('ROLLBACK');
             const deleteImagesRedis = await redisClient.executeIsolated(async (isolatedClient) => {
-              await isolatedClient.watch(`user:${userId}`);
+              await isolatedClient.watch(`user:${usersID}`);
               const multi = isolatedClient
                 .multi()
-                .hSet(`user:${userId}`, 'profile_img_src', ``)
-                .hSet(`user:${userId}`, 'about', ``);
+                .hSet(`user:${usersID}`, 'profile_img_src', ``)
+                .hSet(`user:${usersID}`, 'about', ``);
               return multi.exec();
             });
+            // eslint-disable-next-line array-callback-return
             const deleteImages = uploadParams.map((params: any) => {
               const parameters = {
                 Bucket: params.Bucket,
                 Key: params.Key,
               };
-              s3.deleteObject(parameters, (err, data) => {
+              s3.deleteObject(parameters, (err) => {
                 if (err) {
                   return [null, err];
                 }

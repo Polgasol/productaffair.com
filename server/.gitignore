@@ -1,5 +1,5 @@
 # package directories
-node_modules
+node_modules/
 jspm_packages
 
 logs
@@ -42,7 +42,6 @@ bower_components
 build/Release
 
 # Dependency directories
-node_modules/
 jspm_packages/
 
 # Snowpack dependency directory (https://snowpack.dev/)
@@ -52,7 +51,7 @@ web_modules/
 *.tsbuildinfo
 
 # Optional npm cache directory
-.npm
+# .npm
 
 # Optional eslint cache
 .eslintcache

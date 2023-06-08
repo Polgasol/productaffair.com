@@ -1,0 +1,32 @@
+@use "../../styles/utilities" as u;
+
+.top-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 100%;
+  max-height: u.toRem(20);
+  flex-grow: 0;
+  // border-width: u.toRem(1);
+  background-color: var(--blue);
+  // border-bottom: u.toRem(1) solid;
+  // border-color: var(--white);
+
+  &__right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  &__left-verified {
+    color: var(--white);
+    font-size: u.toRem(12);
+  }
+}

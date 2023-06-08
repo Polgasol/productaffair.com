@@ -1,0 +1,16 @@
+@use '../../../../styles/utilities/' as u;
+@import "../../.././../styles/mixins.scss";
+@import "../../.././../styles/variables.scss";
+
+.readmore-btn {
+  &__btn {
+    font-size: u.toRem(14);
+    font-weight: 600;
+    color: var(--dark-text1);
+    background-color: Transparent;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    outline: none;
+    border: none;
+  }
+}

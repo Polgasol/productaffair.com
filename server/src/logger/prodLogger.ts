@@ -5,7 +5,7 @@ const { timestamp, combine, errors, json } = format;
 
 const buildProdLogger = () => {
   return createLogger({
-    level: 'debug',
+    level: 'info',
     format: combine(timestamp(), errors({ stack: true }), json()),
     defaultMeta: { service: 'user-service' },
     transports: [new transports.Console()],

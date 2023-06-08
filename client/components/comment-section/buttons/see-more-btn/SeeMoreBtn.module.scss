@@ -1,0 +1,16 @@
+@import '../../.././../styles/mixins.scss';
+@import '../../.././../styles/variables.scss';
+
+.see-more {
+  margin-top: 0.50rem;
+
+  &__btn {
+  font-size: 0.90rem;
+  color: var(--dark-text1);
+  background-color: Transparent;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  }
+}

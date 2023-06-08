@@ -26,7 +26,7 @@ router.post(
     }
     return next();
   },
-  (req, res, next) => {
+  (req: any, res, next) => {
     passport.authenticate('local-login', (err, user, info) => {
       if (err) {
         return next(ApiError.internalError(err.message));

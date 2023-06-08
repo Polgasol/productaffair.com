@@ -1,0 +1,850 @@
+@use '../utilities/functions' as u;
+
+$breakpoints: (
+  'xxs': u.toRem(310), 
+  'xs': u.toRem(370), 
+  'xsx': u.toRem(400), 
+  's': u.toRem(480),
+  'sm': u.toRem(600),
+  'm': u.toRem(768),
+  'l': u.toRem(900),
+  'xl': u.toRem(1024),
+  'xxl': u.toRem(1200),
+  'xxxl': u.toRem(1440), 
+);
+
+@mixin breakpoint ($size) {
+  @media (min-width: map-get($breakpoints, $size)) {
+    @content;
+  }
+}
+
+$font-sizes: ( 
+  'xs': u.toRem(8),
+  's': u.toRem(12),
+  'm': u.toRem(16),
+  'l': u.toRem(20),
+  'xl': u.toRem(100),
+  'border-rad': u.toRem(8),
+  'btn-border-rad': u.toRem(4.8),
+);  
+
+@mixin font-size($px) {
+   font-size: map-get($font-sizes, $px)
+};
+
+// /* ==========================================================================
+//    To quickly centre a block element without having to worry about if there is any top or bottom margin already applied.
+//    ========================================================================== */
+// @mixin push--auto {
+//     margin: { 
+//         left: auto;
+//         right: auto;
+//     }
+// }
+
+// /* ==========================================================================
+//    When using ::before and ::after you'll always need these three, so we're saving two lines of code every time you use this.
+//    See below an example of using it without any arguments (You will also see this mixin used in some of our other mixins below too).
+
+//    div::after {
+//        @include pseudo;
+//        top: -1rem; left: -1rem;
+//        width: 1rem; height: 1rem;
+//    }
+//    ========================================================================== */
+// @mixin pseudo($display: block, $pos: absolute, $content: ''){
+//     content: $content;
+//     display: $display;
+//     position: $pos;
+// }
+
+// /* ==========================================================================
+//    We use this for creating scalable elements (usually images / background images) that maintain a ratio.
+//    So to use this you could write the below and your div would have a ratio commonly utilised by video.
+
+//    div {
+//        @include responsive-ratio(16,9);
+//    }
+//    ========================================================================== */
+// @mixin responsive-ratio($x,$y, $pseudo: false) {
+//     $padding: unquote( ( $y / $x ) * 100 + '%' );
+//     @if $pseudo {
+//         &:before {
+//             @include pseudo($pos: relative);
+//             width: 100%;
+//             padding-top: $padding;
+//         }
+//     } @else {
+//         padding-top: $padding;
+//     }
+// }
+
+// /* ==========================================================================
+//    This mixin takes all the hassle out of creating that triangle you'll see coming out of most traditional tooltips, all without images, you just specify it's colour, how big you want it, the direction it's going to come out of your element and you're done!
+//    ========================================================================== */
+// @mixin css-triangle($color, $direction, $size: 6px, $position: absolute, $round: false){
+//     @include pseudo($pos: $position);
+//     width: 0;
+//     height: 0;
+//     @if $round {
+//         border-radius: 3px;
+//     }
+//     @if $direction == down {
+//         border-left: $size solid transparent;
+//         border-right: $size solid transparent;
+//         border-top: $size solid $color;
+//         margin-top: 0 - round( $size / 2.5 );
+//     } @else if $direction == up {
+//         border-left: $size solid transparent;
+//         border-right: $size solid transparent;
+//         border-bottom: $size solid $color;
+//         margin-bottom: 0 - round( $size / 2.5 );
+//     } @else if $direction == right {
+//         border-top: $size solid transparent;
+//         border-bottom: $size solid transparent;
+//         border-left: $size solid $color;
+//         margin-right: -$size;
+//     } @else if  $direction == left {
+//         border-top: $size solid transparent;
+//         border-bottom: $size solid transparent;
+//         border-right: $size solid $color;
+//         margin-left: -$size;
+//     }
+// }
+
+// /* ==========================================================================
+//    Take the pain out of setting styles for a font. (This assumes you have already included the font), set your fallback font once and you never have to worry again.
+//    ========================================================================== */
+// @mixin font-source-sans($size: false, $colour: false, $weight: false,  $lh: false) {
+//     font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+//     @if $size { font-size: $size; }
+//     @if $colour { color: $colour; }
+//     @if $weight { font-weight: $weight; }
+//     @if $lh { line-height: $lh; }
+// }
+
+// /* ==========================================================================
+//    They're a pain as you have to set the style in all the separate formats, this sorts it for you.
+//    Just in case there are people how aren't used to using @content here is a usage example:
+
+//    input,  
+//    textarea {  
+//        @include input-placeholder {
+//            color: $grey;
+//        }
+//    }
+//    ========================================================================== */
+// @mixin input-placeholder {
+//     &.placeholder { @content; }
+//     &:-moz-placeholder { @content; }
+//     &::-moz-placeholder { @content; }
+//     &:-ms-input-placeholder { @content; }
+//     &::-webkit-input-placeholder { @content; }
+// }
+// $breakpoints: (
+//     "phone":        400px,
+//     "phone-wide":   480px,
+//     "phablet":      560px,
+//     "tablet-small": 640px,
+//     "tablet":       768px,
+//     "tablet-wide":  1024px,
+//     "desktop":      1248px,
+//     "desktop-wide": 1440px
+// );
+
+// /* ==========================================================================
+//    A massive time saver! You can just use pixel values but we have some default breakpoints setup that work too, another time saver while keeping your breakpoints consistent.
+//    The example below showing the padding and font-size increasing once the viewport gets over 1024px.
+
+//    .site-header {
+//        padding: 2rem;
+//        font-size: 1.8rem;
+//        @include mq('tablet-wide') {
+//            padding-top: 4rem;
+//            font-size: 2.4rem;
+//        }
+//    }
+//    ========================================================================== */
+// @mixin mq($width, $type: min) {
+//     @if map_has_key($breakpoints, $width) {
+//         $width: map_get($breakpoints, $width);
+//         @if $type == max {
+//             $width: $width - 1px;
+//         }
+//         @media only screen and (#{$type}-width: $width) {
+//             @content;
+//         }
+//     }
+// }
+
+// /* ==========================================================================
+//    While technically this is just a pure function, but I felt it's worth being on the list as it's so easy to loose track of your z-index values when working in several different files, so we created this so that we could store them in one place for easy editing/recording. Just place this snippet in your main variables/settings.scss file (needs to be imported before any of your other files that reference a x-index of course).
+//    Then where ever you're wanting to use a z-index value, name it the same as your class and add in it into your variables/setting file, like below. You'll never have a "z-index: 99999999;" headache again.
+
+//    .site-header {
+//        z-index: z('site-header');
+//    }
+//    ========================================================================== */
+// @function z($name) {
+//     @if index($z-indexes, $name) {
+//         @return (length($z-indexes) - index($z-indexes, $name)) + 1;
+//     } @else {
+//         @warn 'There is no item "#{$name}" in this list; choose one of: #{$z-indexes}';
+//         @return null;
+//     }
+// }
+// $z-indexes: (
+//     "outdated-browser",
+//     "modal",
+//     "site-header",
+//     "page-wrapper",
+//     "site-footer"
+// );
+
+// /* ==========================================================================
+//    Simple and effective for when you need to trigger hardware acceleration for some animation, keeping everything fast, slick and flicker-free.
+//    ========================================================================== */
+// @mixin hardware($backface: true, $perspective: 1000) {
+//     @if $backface {
+//         backface-visibility: hidden;
+//     }
+//     perspective: $perspective;
+// }
+
+// /* ==========================================================================
+//    Adding Truncation to an element isn't as simple as it should be, although it is with this handy time saver, meaning when you include the mixin, you only have to specify your boundry with a max width value, happy days!
+//    ========================================================================== */
+// @mixin truncate($truncation-boundary) {
+//     max-width: $truncation-boundary;
+//     white-space: nowrap;
+//     overflow: hidden;
+//     text-overflow: ellipsis;
+// }
+
+// /*--------------------------------
+// 	Media Queries
+// 	used for outputting content either between media query tags, or without (for fixed-width.scss)
+// 	example: basic usage
+// 	.element {
+// 		width: 50%;
+// 		@include mq("tablet-small") {
+// 			width: 20%;
+// 		}
+// 	}
+// 	example: using max-width
+// 	.element {
+// 		width: 50%;
+// 		@include mq("tablet-small", "max") {
+// 			width: 20%;
+// 		}
+// 	}
+// */
+
+// $fixed-width:       false !default;
+// $fixed-width-limit: 980px !default;
+
+// @mixin mq($width, $type: min) {
+
+//     @if map_has_key($breakpoints, $width) {
+//         $width: map_get($breakpoints, $width);
+
+//         @if $type == max {
+//             $width: $width - 1px;
+//         }
+//     }
+
+//     @if $fixed-width {
+
+//         @if $width <= $fixed-width-limit {
+//             @content;
+//         }
+
+//     } @else {
+
+//         @media only screen and (#{$type}-width: $width) {
+//             @content;
+//         }
+
+//     }
+
+// }
+
+
+
+// /*--------------------------------
+// 	Margin / Padding Quick Resets
+// 	example: top margin
+// 	.element {
+// 		@include push--top($base-spacing-unit);
+// 	}
+// 	example: top & bottom margin
+// 	.element {
+// 		@include push--ends($base-spacing-unit);
+// 	}
+// 	example: left & right margin
+// 	.element {
+// 		@include push--sides($base-spacing-unit);
+// 	}
+// 	example: remove a top margin
+// 	.element {
+// 		@include flush--top;
+// 	}
+// */
+
+// // add/remove margins
+
+// @mixin push($spacing: $base-spacing-unit) { margin: $spacing; }
+// @mixin push--top($spacing: $base-spacing-unit) { margin-top: $spacing; }
+// @mixin push--bottom($spacing: $base-spacing-unit) { margin-bottom: $spacing; }
+// @mixin push--left($spacing: $base-spacing-unit) { margin-left: $spacing; }
+// @mixin push--right($spacing: $base-spacing-unit) { margin-right: $spacing; }
+// @mixin push--ends($spacing: $base-spacing-unit) { margin: { top: $spacing; bottom: $spacing; } }
+// @mixin push--sides($spacing: $base-spacing-unit) { margin: { left: $spacing; right: $spacing; } }
+
+// @mixin push--auto { margin: { left: auto; right: auto; } }
+// @mixin offset--sides($spacing: $base-spacing-unit) { margin: { left: -$spacing; right: -$spacing; } }
+
+// @mixin flush { margin: 0; }
+// @mixin flush--top { margin-top: 0; }
+// @mixin flush--bottom { margin-bottom: 0; }
+// @mixin flush--left { margin-left: 0; }
+// @mixin flush--right { margin-right: 0; }
+// @mixin flush--ends { margin: { top: 0; bottom: 0; } }
+// @mixin flush--sides { margin: { left: 0; right: 0; } }
+
+
+// // add/remove paddings
+
+// @mixin soft($spacing: $base-spacing-unit) { padding: $spacing; }
+// @mixin soft--top($spacing: $base-spacing-unit) { padding-top: $spacing; }
+// @mixin soft--bottom($spacing: $base-spacing-unit) { padding-bottom: $spacing; }
+// @mixin soft--left($spacing: $base-spacing-unit) { padding-left: $spacing; }
+// @mixin soft--right($spacing: $base-spacing-unit) { padding-right: $spacing; }
+// @mixin soft--ends($spacing: $base-spacing-unit) { padding: { top: $spacing; bottom: $spacing; } }
+// @mixin soft--sides($spacing: $base-spacing-unit) { padding: { left: $spacing; right: $spacing; } }
+
+// @mixin hard { padding: 0; }
+// @mixin hard--top { padding-top: 0; }
+// @mixin hard--bottom { padding-bottom: 0; }
+// @mixin hard--left { padding-left: 0; }
+// @mixin hard--right { padding-right: 0; }
+// @mixin hard--ends { padding: { top: 0; bottom: 0; } }
+// @mixin hard--sides { padding: { left: 0; right: 0; } }
+
+
+
+// /*--------------------------------
+// 	LT IE9
+// 	to be used in conjunction with fixed-width.scss
+// */
+
+// // only chuck out content
+// $lt-ie9: false !default;
+
+// @mixin lt-ie9 {
+
+// 	@if $lt-ie9 {
+
+// 		.lt-ie9 & {
+// 			@content;
+// 		}
+
+// 	}
+
+// }
+
+
+
+// /*--------------------------------
+// 	Helper mixins
+// */
+
+// // Contain floats / clearfix
+
+// @mixin cf {
+
+// 	&:after {
+// 		content: "";
+// 		display: table;
+// 		clear: both;
+// 	}
+// }
+
+
+// // Image replacement
+
+// @mixin ir {
+// 	display: block;
+// 	background: {
+// 		repeat: no-repeat;
+// 		position: 0 0;
+// 	}
+// 	overflow: hidden;
+// 	text-indent: 100%;
+// 	white-space: nowrap;
+// }
+
+
+// // Hide from both screenreaders and browsers
+
+// @mixin hidden {
+// 	display: none;
+// 	visibility: hidden;
+// }
+
+// @mixin visible($state: 'block') {
+// 	display: unquote($state);
+// 	visibility: visible;
+// }
+
+
+// // Hide only visually, but have it available for screenreaders
+
+// @mixin vh($focusable: false) {
+// 	border: 0;
+// 	clip: rect(0 0 0 0);
+// 	height: 1px;
+// 	margin: -1px;
+// 	overflow: hidden;
+// 	padding: 0;
+// 	position: absolute;
+// 	width: 1px;
+
+// 	@if $focusable {
+// 		@include vh-focusable;
+// 	}
+// }
+
+// @mixin vh-reset {
+// 	clip: auto;
+// 	height: auto;
+// 	margin: 0;
+// 	overflow: visible;
+// 	position: static;
+// 	width: auto;
+// }
+
+
+// // Allow the element to be focusable when navigated to via the keyboard
+
+// @mixin vh-focusable {
+
+// 	&:active,
+// 	&:focus {
+// 		clip: auto;
+// 		height: auto;
+// 		margin: 0;
+// 		overflow: visible;
+// 		position: static;
+// 		width: auto;
+// 	}
+// }
+
+
+// // Hide visually and from screenreaders, but maintain layout
+
+// @mixin invisible {
+// 	visibility: hidden;
+// }
+
+
+
+// /*--------------------------------
+// 	Form input placeholder text
+// 	example:
+// 	input,
+// 	textarea {
+// 		@include input-placeholder {
+// 			color: $grey;
+// 		}
+// 	}
+// */
+
+// @mixin input-placeholder {
+// 	&.placeholder { @content; }
+// 	&:-moz-placeholder { @content; }
+// 	&::-moz-placeholder { @content; }
+// 	&:-ms-input-placeholder { @content; }
+// 	&::-webkit-input-placeholder { @content; }
+// }
+
+
+
+// /*--------------------------------
+// 	Retina images
+// 	example:
+// 	.element {
+// 		@include retina {
+// 			background-image: url(../img/background@2x.png);
+// 		}
+// 	}
+// */
+
+// @mixin retina {
+// 	@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
+// 	only screen and (-moz-min-device-pixel-ratio: 1.5),
+// 	only screen and (-o-min-device-pixel-ratio: 3 / 2),
+// 	only screen and (min-device-pixel-ratio: 1.5),
+// 	only screen and (min-resolution: 1.5dppx) {
+// 		@content;
+// 	}
+// }
+
+
+
+// /*--------------------------------
+// 	Content margins
+// 	fore removing first/last child margins
+// 	example: default
+// 	.element {
+// 		@include content-margins;
+// 	}
+// 	output:
+// 	.element > *:first-child {
+// 		margin-top: 0;
+// 	}
+// 	.element > *:last-child {
+// 		margin-bottom: 0;
+// 	}
+// 	example: empty selector
+// 	.element {
+// 		@include content-margins(false);
+// 	}
+// 	output:
+// 	.element:first-child {
+// 		margin-top: 0;
+// 	}
+// 	.element:last-child {
+// 		margin-bottom: 0;
+// 	}
+// */
+
+
+// @mixin content-margins($selector: '> *') {
+// 	@if $selector {
+// 		#{unquote($selector)} {
+// 			&:first-child { margin-top: 0; }
+// 			&:last-child { margin-bottom: 0; }
+// 		}
+// 	} @else {
+// 		&:first-child { margin-top: 0; }
+// 		&:last-child { margin-bottom: 0; }
+// 	}
+// }
+
+
+
+// /*--------------------------------
+// 	CSS Triangle
+// 	used for creating CSS only triangles
+// 	example:
+// 	.element {
+// 		&:before {
+// 			@include css-triangle(blue, down);
+// 		}
+// 	}
+// */
+
+// @mixin css-triangle($color, $direction, $size: 6px, $position: absolute, $round: false){
+// 	@include pseudo($pos: $position);
+// 	width: 0;
+// 	height: 0;
+
+// 	@if $round {
+// 		border-radius: 3px;
+// 	}
+
+// 	@if $direction == down {
+// 		border-left: $size solid transparent;
+// 		border-right: $size solid transparent;
+// 		border-top: $size solid $color;
+// 		margin-top: 0 - round( $size / 2.5 );
+// 	} @else if $direction == up {
+// 		border-left: $size solid transparent;
+// 		border-right: $size solid transparent;
+// 		border-bottom: $size solid $color;
+// 		margin-bottom: 0 - round( $size / 2.5 );
+// 	} @else if $direction == right {
+// 		border-top: $size solid transparent;
+// 		border-bottom: $size solid transparent;
+// 		border-left: $size solid $color;
+// 		margin-right: -$size;
+// 	} @else if  $direction == left {
+// 		border-top: $size solid transparent;
+// 		border-bottom: $size solid transparent;
+// 		border-right: $size solid $color;
+// 		margin-left: -$size;
+// 	}
+// }
+
+
+
+// /*--------------------------------
+// 	Hide text
+// 	example:
+// 	.element {
+// 		@include hide-text;
+// 	}
+// */
+
+// @mixin hide-text($break: false, $indent: 200%, $align: left, $overflow: hidden) {
+// 	@if $break {
+// 		position: absolute;
+// 		top: 0; left: 0;
+// 		pointer-events: none;
+// 	}
+// 	text: {
+// 		indent: $indent;
+// 		align: $align;
+// 	}
+// 	font-size: 0;
+// 	white-space: nowrap;
+// 	@if $overflow {
+// 		overflow: $overflow;
+// 	}
+// }
+
+
+
+// /*--------------------------------
+// 	Responsive ratio
+// 	Used for creating scalable elements that maintain the same ratio
+// 	example:
+// 	.element {
+// 		@include responsive-ratio(400, 300);
+// 	}
+// */
+
+// @mixin responsive-ratio($x,$y, $pseudo: false) {
+// 	$padding: unquote( ( $y / $x ) * 100 + '%' );
+
+// 	@if $pseudo {
+// 		&:before {
+// 			@include pseudo($pos: relative);
+// 			width: 100%;
+// 			padding-top: $padding;
+// 		}
+// 	} @else {
+// 		padding-top: $padding;
+// 	}
+// }
+
+
+
+// /*--------------------------------
+// 	Typography
+// 	Text image replacement, with responsive ratio
+// 	HTML:
+// 	<h1 class="element">
+// 		<span>Text to replace</span>
+// 	</h1>
+// 	example:
+// 	.element {
+// 		@include typography(200, 50, 'hello-world');
+// 	}
+// */
+
+// @mixin typography($w, $h, $file, $type: png, $overflow: hidden) {
+// 	@include responsive-ratio($w, $h, true);
+// 	position: relative;
+// 	max-width: ( $w / 10 ) * 1rem;
+// 	background: url('/assets/img/typography/#{$file}.#{$type}') 50% 50% no-repeat;
+// 	background-size: contain;
+
+// 	span {
+// 		@include hide-text(true, $overflow: $overflow);
+// 	}
+// }
+
+
+
+// /*--------------------------------
+// 	Icon
+// 	For using fontastic icons in pseudo elements
+// */
+
+// @mixin icon-css($content: false) {
+// 	@if $content {
+// 		content: '#{$content}';
+// 	}
+// 	display: block;
+// 	font-family: "university-of-northampton" !important;
+// 	font-style: normal !important;
+// 	font-weight: normal !important;
+// 	font-variant: normal !important;
+// 	text-transform: none !important;
+// 	speak: none;
+// 	line-height: 1;
+// 	-webkit-font-smoothing: antialiased;
+// 	-moz-osx-font-smoothing: grayscale;
+// }
+
+
+
+// /*--------------------------------
+// 	Colours
+// 	background, colour, etc. match up with colour map in _variables.scss
+// 	modify to suit per project
+// */
+
+// @mixin colours(
+// 	$selector: false,
+// 	$chain: "&--",
+// 	$background: "base",
+// 	$border: true
+// ) {
+
+// 	@each $name, $values in $colours {
+// 		#{$chain}#{$name} {
+
+// 			@if $selector {
+
+// 				#{$selector} {
+// 					@if $background {
+// 						background-color: map-get($values, $background);
+// 						@if $border {
+// 							border-color: darken(map-get($values, $background), 20%);
+// 						}
+// 					}
+// 				}
+
+// 			} @else {
+
+// 				@if $background {
+// 					background-color: map-get($values, $background);
+// 				}
+
+// 			}
+// 		}
+
+// 	}
+
+// }
+
+
+
+// /*--------------------------------
+// 	Misc
+// */
+
+// @mixin antialias {
+// 	font-smoothing: antialiased;
+// 	-webkit-font-smoothing: antialiased;
+// 	-moz-osx-font-smoothing: grayscale;
+// }
+
+
+// @mixin appearance($val: none) {
+// 	-webkit-appearance: $val;
+// 	-moz-appearance: $val;
+// 	appearance: $val;
+// }
+
+
+// @mixin hardware($backface: true, $perspective: 1000) {
+
+// 	@if $backface {
+// 		backface-visibility: hidden;
+// 	}
+
+// 	perspective: $perspective;
+// }
+
+
+// @mixin pos($pos, $t, $r, $b, $l, $z: false, $hardware: true) {
+// 	@if $pos == fixed and $hardware { @include hardware; }
+// 	@if $pos { position: $pos; }
+// 	@if $t { top: $t; }
+// 	@if $r { right: $r; }
+// 	@if $b { bottom: $b; }
+// 	@if $l { left: $l; }
+// 	@if $z { z-index: $z; }
+// }
+
+
+// @mixin pseudo($display: block, $pos: absolute, $content: ''){
+// 	content: $content;
+// 	display: $display;
+// 	position: $pos;
+// }
+
+
+// @mixin selection {
+// 	::-moz-selection { @content; }
+// 	::selection { @content; }
+// }
+
+
+// @mixin truncate($truncation-boundary) {
+// 	max-width: $truncation-boundary;
+// 	white-space: nowrap;
+// 	overflow: hidden;
+// 	text-overflow: ellipsis;
+// }
+
+
+// @mixin unlist($margin: true, $padding: true) {
+// 	@if $margin {
+// 		@if $margin == 'vertical' {
+// 			@include flush--ends;
+// 		} @else if $margin == 'horizontal' {
+// 			@include flush--sides;
+// 		} @else {
+// 			margin: 0;
+// 		}
+// 	}
+// 	@if $padding {
+// 		padding: 0;
+// 	}
+// 	list-style: none;
+// }
+
+
+// @mixin unselectable {
+// 	-webkit-touch-callout: none;
+// 	user-select: none;
+// }
+
+
+// /*--------------------------------
+// 	Fluid Property
+// 	http://www.adrenalinmedia.com.au/the-agency/insights/this-changes-everything-css-fluid-properties.aspx
+// 	HTML:
+// 	<h1 class="element">
+// 		<span>Text to replace</span>
+// 	</h1>
+// 	example:
+// 	h1 {
+// 		@include fp(font-size, 50, 100); // 50px at 320, 100px at 1920;
+// 	}
+// 	output:
+// 	h1 {
+// 		font-size: calc(3.125vw + 40px); //This is the magic!
+// 	}
+// 	@media (max-width:320px){ //Clips the start to the min value
+// 		font-size:50px;
+// 	}
+// 	@media (min-width:1920px){ //Clips the end to the max value
+// 		font-size:100px;
+// 	}
+// */
+
+// @mixin fp($property, $min, $max, $start: 320, $end: breakpoint('desktop'), $clip: true, $clipAtStart: true, $clipAtEnd: true) {
+// 	$start: $start / ($start * 0 + 1);
+// 	$end: $end / ($end * 0 + 1);
+// 	$multiplier: ($max - $min) / ($end - $start) * 100;
+// 	$adder: ($min * $end - $max * $start) / ($end - $start);
+// 	$formula: calc(#{$multiplier + 0vw} + #{$adder + 0px});
+// 	@if $clip and $clipAtStart {
+// 		@media (max-width: #{$start + 0px}) {
+// 			#{$property}: $min + 0px;
+// 		}
+// 	}
+// 	@if $clip and $clipAtEnd {
+// 		@media (min-width: #{$end + 0px}) {
+// 			#{$property}: $max + 0px;
+// 		}
+// 	}
+// 	#{$property}: $formula;
+// }

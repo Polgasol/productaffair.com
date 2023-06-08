@@ -1,0 +1,43 @@
+@use "../../../../styles/utilities/" as u;
+@import "../../.././../styles/mixins.scss";
+@import "../../.././../styles/variables.scss";
+
+.comment-btn {
+  background: transparent;
+
+  &__btn {
+    background-color: var(--blue);
+    cursor: pointer;
+    outline: none;
+    color: var(--white);
+    font-size: 0.8rem;
+    height: u.toRem(40);
+    // border-radius: 0.30rem;
+    // background-repeat: no-repeat;
+    // border: none;
+    // padding: .5rem;
+    width: u.toRem(100);
+  }
+  &__disabled-btn {
+    background-color: var(--gray);
+    // cursor: pointer;
+    outline: none;
+    color: var(--white);
+    font-size: 0.8rem;
+    height: u.toRem(40);
+    width: u.toRem(100);
+    // border-radius: 0.30rem;
+    // background-repeat: no-repeat;
+    // border: none;
+    // padding: 0.3rem;
+    // width: 5rem;
+
+  }
+  &__loading-btn {
+    background-color: transparent;
+    // cursor: pointer;
+    outline: none;
+    color: var(--white);
+
+  }
+}

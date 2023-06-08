@@ -1,0 +1,43 @@
+@use "../../../../styles/utilities/" as u;
+
+.search-form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border: var(--meta-data) solid u.toRem(0.16);
+  background-color: var(--white);
+  min-width: u.toRem(280);
+  max-width: u.toRem(350);
+  margin-top: u.toRem(2);
+  // min-width: u.toRem(200);
+  height: u.toRem(38);
+  // flex-grow: 1;
+  // border-radius: u.toRem(5.5);
+  // margin-right: u.toRem(300);
+  @include u.breakpoint(m) {
+    width: u.toRem(1000);
+    //margin-right: u.toRem(50);
+    //margin-left: 2rem;
+  }
+  @include u.breakpoint(l) {
+    // margin-right: 15rem;
+    //margin-left: 2rem;
+  }
+  @include u.breakpoint(xl) {
+    // margin-right: 20rem;
+    //margin-left: 2rem;
+  }
+  @include u.breakpoint(xxxl) {
+    // margin-right: 25rem;
+    //margin-left: 2rem;
+  }
+
+  &__input {
+    font-size: 1rem;
+    width: 100%;
+    border: 0;
+    outline: none;
+    margin: 0 0 0 0.65rem;
+    background-color: var(--white);
+  }
+}

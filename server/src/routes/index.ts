@@ -18,6 +18,7 @@ import like from './like/like';
 import unlike from './unlike/unlike';
 import profileInfo from './profile-info/profileInfo';
 import deletePost from './delete-post/deletePost';
+import comments from './comments/comments';
 
 const router = express.Router();
 
@@ -68,5 +69,6 @@ router.use('/unfollow', unfollow);
 router.use('/profile', profile);
 router.use('/profileinfo', profileInfo);
 router.use('/deletepost', deletePost);
+router.use('/comments', comments);
 
 export default router;

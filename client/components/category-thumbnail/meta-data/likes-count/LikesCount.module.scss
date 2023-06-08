@@ -1,0 +1,14 @@
+@use '../../../../styles/utilities/' as u;
+@import "../../../../styles/mixins.scss";
+@import "../../../../styles/variables.scss";
+
+.likes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 u.toRem(10) 0 0;
+  &__text {
+    font-size: u.toRem(14);
+    color: var(--meta-data);
+  }
+}

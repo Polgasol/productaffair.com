@@ -1,0 +1,11 @@
+@use "../../../../styles/utilities" as u;
+
+.settings {
+  text-decoration: none;
+  cursor: pointer;
+
+  &__link {
+    font-size: 1rem;
+    color: var(--dark-text1);
+  }
+}

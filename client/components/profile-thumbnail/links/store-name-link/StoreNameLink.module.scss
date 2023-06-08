@@ -1,0 +1,21 @@
+@use "../../../../styles/utilities/" as u;
+
+.storeName {
+  width: 100%;
+  white-space: initial; // this is the key in ellipsis
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  // height: u.toRem(30);
+  padding: u.toRem(5) u.toRem(5) 0 u.toRem(5);
+  margin-bottom: u.toRem(5);
+  &__text {
+    // height: calc(1.2em * 2);
+    color: var(--dark-text1);
+    font-weight: 600;
+    font-size: u.toRem(16);
+    // line-height: 1.2em;
+  }
+}

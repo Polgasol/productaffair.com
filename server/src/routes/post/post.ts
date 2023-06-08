@@ -41,7 +41,7 @@ router.get(
           const getPost = await redisClient.v4.hGetAll(`post:${postId}`);
           const profileImg = await redisClient.v4.hGet(`user:${getPost.user_id}`, 'profile_img_src');
           const profileImgUrl = async () => {
-            if (profileImg !== '""') {
+            if (profileImg !== '""' && profileImg !== '') {
               const signedUrl = await s3.getSignedUrlPromise('getObject', {
                 Bucket: bucketName,
                 Key: `imageuploads/${profileImg}`, // from redis image url
@@ -120,12 +120,12 @@ router.get(
           }); // send updated post details
         }
         // increment then send the incremented views count together with post details.
-        await redisClient
+        const writeViewsRedis = await redisClient
           .multi()
           .hSet(`view:${req.user.username}++${req.ip}++${postId}`, 'id', postId)
           .expire(
             `view:${req.user.username}++${req.ip}++${postId}`,
-            150, // secs
+            600, // secs
           )
           .hIncrBy(`post:${postId}`, 'views_count', 1)
           .exec();
@@ -150,12 +150,21 @@ router.get(
         };
 
         const profileImgUrl = async () => {
-          const signedUrl = await s3.getSignedUrlPromise('getObject', {
-            Bucket: bucketName,
-            Key: `imageuploads/${profileImg}`, // from redis image url
-            Expires: 60, // in seconds
-          });
-          return signedUrl;
+          if (profileImg !== '""' && profileImg !== '') {
+            const signedUrl = await s3.getSignedUrlPromise('getObject', {
+              Bucket: bucketName,
+              Key: `imageuploads/${profileImg}`, // from redis image url
+              Expires: 60, // in seconds
+            });
+            return signedUrl;
+          }
+
+          // const signedUrl = await s3.getSignedUrlPromise("getObject", {
+          //   Bucket: bucketName,
+          //   Key: `imageuploads/${profileImg}`, // from redis image url
+          //   Expires: 60, //in seconds
+          // });
+          return null;
         };
 
         const profileImage = await profileImgUrl();
@@ -211,7 +220,7 @@ router.get(
 
         const [successPgViewsPost, failPgViewsPost] = await postViewsPg();
 
-        if (successPgViewsPost) {
+        if (writeViewsRedis && successPgViewsPost) {
           return res.status(200).json({
             data: await sendData(),
             isFollowed: await checkIfAlreadyFollowed(),
@@ -231,12 +240,21 @@ router.get(
           const getPost = await redisClient.v4.hGetAll(`post:${postId}`);
           const profileImg = await redisClient.v4.hGet(`user:${getPost.user_id}`, 'profile_img_src');
           const profileImgUrl = async () => {
-            const signedUrl = await s3.getSignedUrlPromise('getObject', {
-              Bucket: bucketName,
-              Key: `imageuploads/${profileImg}`, // from redis image url
-              Expires: 60, // in seconds
-            });
-            return signedUrl;
+            if (profileImg !== '""' && profileImg !== '') {
+              const signedUrl = await s3.getSignedUrlPromise('getObject', {
+                Bucket: bucketName,
+                Key: `imageuploads/${profileImg}`, // from redis image url
+                Expires: 60, // in seconds
+              });
+              return signedUrl;
+            }
+
+            // const signedUrl = await s3.getSignedUrlPromise("getObject", {
+            //   Bucket: bucketName,
+            //   Key: `imageuploads/${profileImg}`, // from redis image url
+            //   Expires: 60, //in seconds
+            // });
+            return null;
           };
 
           const profileImage = await profileImgUrl();
@@ -271,12 +289,12 @@ router.get(
           }); // send updated post details
         }
         // increment then send the incremented views count together with post details.
-        await redisClient
+        const writeViewsRedis = await redisClient
           .multi()
           .hSet(`view:${req.ip}++${postId}`, 'id', postId)
           .expire(
             `view:${req.ip}++${postId}`,
-            150, // secs
+            600, // secs
           )
           .hIncrBy(`post:${postId}`, 'views_count', 1)
           .exec();
@@ -296,12 +314,21 @@ router.get(
         };
 
         const profileImgUrl = async () => {
-          const signedUrl = await s3.getSignedUrlPromise('getObject', {
-            Bucket: bucketName,
-            Key: `imageuploads/${profileImg}`, // from redis image url
-            Expires: 60, // in seconds
-          });
-          return signedUrl;
+          if (profileImg !== '""' && profileImg !== '') {
+            const signedUrl = await s3.getSignedUrlPromise('getObject', {
+              Bucket: bucketName,
+              Key: `imageuploads/${profileImg}`, // from redis image url
+              Expires: 60, // in seconds
+            });
+            return signedUrl;
+          }
+
+          // const signedUrl = await s3.getSignedUrlPromise("getObject", {
+          //   Bucket: bucketName,
+          //   Key: `imageuploads/${profileImg}`, // from redis image url
+          //   Expires: 60, //in seconds
+          // });
+          return null;
         };
 
         const profileImage = await profileImgUrl();
@@ -329,7 +356,7 @@ router.get(
           };
         };
         const [successPgViewsPost, failPgViewsPost] = await postViewsPg();
-        if (successPgViewsPost) {
+        if (writeViewsRedis && successPgViewsPost) {
           return res.status(200).json({
             data: await sendData(),
             isFollowed: 'Guest',
@@ -345,12 +372,21 @@ router.get(
       const getPost = await redisClient.v4.hGetAll(`post:${postId}`);
       const profileImg = await redisClient.v4.hGet(`user:${getPost.user_id}`, 'profile_img_src');
       const profileImgUrl = async () => {
-        const signedUrl = await s3.getSignedUrlPromise('getObject', {
-          Bucket: bucketName,
-          Key: `imageuploads/${profileImg}`, // from redis image url
-          Expires: 60, // in seconds
-        });
-        return signedUrl;
+        if (profileImg !== '""' && profileImg !== '') {
+          const signedUrl = await s3.getSignedUrlPromise('getObject', {
+            Bucket: bucketName,
+            Key: `imageuploads/${profileImg}`, // from redis image url
+            Expires: 60, // in seconds
+          });
+          return signedUrl;
+        }
+
+        // const signedUrl = await s3.getSignedUrlPromise("getObject", {
+        //   Bucket: bucketName,
+        //   Key: `imageuploads/${profileImg}`, // from redis image url
+        //   Expires: 60, //in seconds
+        // });
+        return null;
       };
 
       const profileImage = await profileImgUrl();

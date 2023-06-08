@@ -1,0 +1,10 @@
+@import "../../../../styles/mixins.scss";
+@import "../../../../styles/variables.scss";
+
+.overall {
+  margin-left: 0.25rem;
+
+  &__text {
+    font-size: 1.25rem;
+  }
+}

@@ -2,7 +2,7 @@
 import express from 'express';
 import passport from 'passport';
 import ApiError from '../../middleware/api-error-handler/apiError';
-import logger from '../../logger/index';
+// import logger from '../../logger/index';
 
 // eslint-disable-next-line new-cap
 const router = express.Router();
@@ -10,13 +10,11 @@ const router = express.Router();
 router.get(
   '/google',
   (req: any, res, next) => {
-    logger.info(`GOOGLE ROUTE GET REQUEST`);
     if (req.user) {
       if (
         (req.user.authtype === 'local' && req.user.verified === true) ||
         (req.user.authtype === 'google' && req.user.verified === true)
       ) {
-        logger.info('redirect to /home');
         return res.status(200).json({
           data: {
             verified: true,
@@ -28,7 +26,6 @@ router.get(
         delete req.session.passport.user; // delete and proceed to google auth
         return req.session.save(req.sessionID, (err: Error) => {
           if (err) return next(ApiError.internalError('Error'));
-          logger.info(`Unverified GOOGLE is now deleted`);
           return next();
         });
       }
@@ -36,7 +33,6 @@ router.get(
         delete req.session.passport.user; // delete and proceed to google auth
         return req.session.save(req.sessionID, (err: Error) => {
           if (err) return next(ApiError.internalError('Error'));
-          logger.info(`Unverified LOCAL is now deleted`);
           return next();
         });
       }

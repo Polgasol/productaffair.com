@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import User from '../models/user-data/user';
-// import logger from '../logger/index';
+import logger from '../logger/index';
 import Auth from '../models/auth/auth';
 import redisClient from '../models/redis/redis';
 import { RegisterForm } from '../types/auth';
@@ -23,6 +23,7 @@ const authenticateUser = async (req: any, username: string, password: string, do
     const verified = false;
     const about = '';
     const profImg = '';
+    const resendTries = 1;
     const salt = await bcrypt.genSalt(12).catch(() => done(null, false, { message: 'Server Error' }));
     const isUserVerified = await User.userEmailVerified(email).catch(() =>
       done(null, false, { message: 'Server Error' }),
@@ -79,6 +80,7 @@ const authenticateUser = async (req: any, username: string, password: string, do
               username,
               email,
               vcode: '',
+              resendTries,
               guest: false,
               authtype,
               verified,
@@ -136,6 +138,7 @@ const authenticateUser = async (req: any, username: string, password: string, do
               username,
               email,
               vcode: '',
+              resendTries,
               guest: false,
               verified,
               authtype,
@@ -165,7 +168,6 @@ const authenticateUser = async (req: any, username: string, password: string, do
 
     if (isUserVerified.rows[0]) {
       if (isUserVerified.rows[0].verified === true) {
-        console.log(`Already Exist: ${isUserVerified.rows[0].verified}`);
         if (getUsername.rows[0]) {
           return done(null, false, { message: 'Username already exist' });
         }
@@ -200,11 +202,13 @@ passport.use(
     authenticateUser,
   ),
 );
-// passport.serializeUser((user: any, done: any) => {
-//   logger.info('naset na');
-//   done(null, user); // iseset mo yung result sa object na id
-// });
-// passport.deserializeUser(async (id: any, done: any) => {
-//   logger.info('naset nanaman');
-//   done(null, id); // req.session.id is the name of the session req.user can now be acccessed
-// });
+passport.serializeUser((user: any, done: any) => {
+  process.nextTick(() => {
+    done(null, user);
+  }); // iseset mo yung result sa object na id
+});
+passport.deserializeUser(async (user: any, done: any) => {
+  process.nextTick(() => {
+    done(null, user);
+  }); // req.session.id is the name of the session req.user can now be acccessed
+});

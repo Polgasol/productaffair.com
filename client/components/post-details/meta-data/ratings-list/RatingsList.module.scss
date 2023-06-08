@@ -1,0 +1,30 @@
+@use "../../../../styles/utilities/" as u;
+@import "../../../../styles/mixins.scss";
+@import "../../../../styles/variables.scss";
+
+.ratings-list {
+  margin-top: 0.5rem;
+  width: 13rem;
+
+  &__row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__score {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  &__label {
+    font-size: u.toRem(16);
+    color: var(--dark-text1);
+  }
+  &__text {
+    font-size: u.toRem(16);
+    color: var(--dark-text1);
+  }
+}

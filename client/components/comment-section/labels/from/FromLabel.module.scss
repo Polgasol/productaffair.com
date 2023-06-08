@@ -1,0 +1,13 @@
+@use '../../../../styles/utilities/' as u;
+@import "../../.././../styles/mixins.scss";
+@import "../../.././../styles/variables.scss";
+
+.from {
+  margin-right: u.toRem(8);
+
+  &__label {
+    font-style: italic;
+    font-size: u.toRem(16);
+    color: var(--meta-data);
+  }
+}

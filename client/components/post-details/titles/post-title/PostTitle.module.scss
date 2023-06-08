@@ -1,0 +1,11 @@
+@use '../../../../styles/utilities/' as u;
+@import "../../../../styles/mixins.scss";
+@import "../../../../styles/variables.scss";
+
+.post-title {
+  &__text {
+    width: 100%;
+    margin-top: u.toRem(8);
+    font-size: u.toRem(18);
+  }
+}

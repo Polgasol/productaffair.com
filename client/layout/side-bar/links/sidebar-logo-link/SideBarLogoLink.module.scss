@@ -1,0 +1,18 @@
+@use "../../../../styles/utilities" as u;
+
+.header {
+  margin-left: 0.3rem;
+  padding: 0 0 0.25rem 0;
+  background: transparent;
+  @include u.breakpoint(xs) {
+      margin-left: 0.8rem;
+  }
+
+  &__link {
+    color: var(--dark-text1);
+    font-size: 1.3rem;
+  @include u.breakpoint(xs) {
+      font-size: 2rem;
+  }
+  }
+}

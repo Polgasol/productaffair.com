@@ -1,0 +1,61 @@
+@use "../../../styles/utilities/" as u;
+
+.loading-container {
+  margin: 0 auto;
+  padding-top: u.toRem(32);
+  max-width: u.toRem(1760);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.profile-main {
+  margin: 0 auto;
+  padding-top: u.toRem(32);
+  max-width: u.toRem(1760);
+
+  &__section {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    @include u.breakpoint(m) {
+      align-items: flex-start;
+      flex-direction: row;
+    }
+  }
+
+  &__posts {
+    display: grid;
+    //align-items: center;
+    grid-template-columns: repeat(auto-fill, minmax(u.toRem(240), 1fr));
+    grid-gap: u.toRem(20);
+    overflow: hidden;
+    width: 100%;
+
+    @include u.breakpoint(xs) {
+      padding: 0 1rem 1rem 1rem;
+    }
+  }
+  &__end-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.loading-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.no-posts {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,0 +1,71 @@
+@use "../../styles/utilities/" as u;
+
+.loading-container {
+  padding: u.toRem(15);
+  width: 100%;
+  height: 100%;
+  top: u.toRem(100);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: u.toRem(24);
+
+  @include u.breakpoint(m) {
+    height: u.toRem(500);
+    width: u.toRem(350);
+    position: -webkit-sticky;
+    position: sticky;
+  }
+}
+.profile-info {
+  padding: u.toRem(15);
+  width: 100%;
+  height: 100%;
+  top: u.toRem(100);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: u.toRem(24);
+
+  @include u.breakpoint(m) {
+    height: u.toRem(500);
+    width: u.toRem(350);
+    position: -webkit-sticky;
+    position: sticky;
+  }
+
+  &__photo {
+    background-color: var(--white);
+    border-radius: u.toRem(8);
+    border: 1px solid var(--gray);
+    width: u.toRem(100);
+    height: u.toRem(100);
+    padding: u.toRem(3);
+  }
+  &__icon {
+    color: var(--gray);
+  }
+  &__username {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: u.toRem(10);
+  }
+  &__followers {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: u.toRem(16);
+  }
+  &__follow-btn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: u.toRem(16);
+  }
+  &__about {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+}

@@ -99,4 +99,14 @@ const authenticateUser = (req, username, password, done) => __awaiter(void 0, vo
     }
 });
 passport_1.default.use('local-login', new LocalStrategy({ passReqToCallback: true }, authenticateUser));
+passport_1.default.serializeUser((user, done) => {
+    process.nextTick(() => {
+        done(null, user);
+    });
+});
+passport_1.default.deserializeUser((user, done) => __awaiter(void 0, void 0, void 0, function* () {
+    process.nextTick(() => {
+        done(null, user);
+    });
+}));
 //# sourceMappingURL=passport-local-login.js.map

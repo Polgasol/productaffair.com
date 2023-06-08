@@ -1,0 +1,15 @@
+@use '../../../../styles/utilities/' as u;
+@import "../../../../styles/mixins.scss";
+@import "../../../../styles/variables.scss";
+
+.comment-name {
+  &__link {
+    text-decoration: none;
+    cursor: pointer;
+  }
+  &__text {
+    font-weight: 600;
+    font-size: u.toRem(16);
+    color: var(--dark-text1);
+  }
+}

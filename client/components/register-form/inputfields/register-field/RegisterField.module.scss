@@ -1,0 +1,163 @@
+@use "../../../../styles/utilities/" as u;
+
+.error-list {
+  color: var(--meta-data)
+}
+.submit-con {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin: 2rem 0 1rem 0;
+}
+.first-input-con {
+  width: 100%;
+}
+.register-input-form {
+  width: 100%;
+}
+.age-username-con {
+  display: flex;
+  flex-direction: row;
+  margin: 0 0 1rem 0;
+}
+.name-con {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  @include u.breakpoint(xs) {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 0 1rem 0 0;
+  }
+}
+.register-input-fields {
+  width: 100%;
+}
+.email-input-con {
+  width: 100%;
+}
+.email-input {
+  outline: 0;
+  background: #f2f2f2;
+  width: 100%;
+  border: 0;
+  border-radius: 5px;
+  padding: 15px;
+  box-sizing: border-box;
+}
+.hello {
+  color: blue;
+}
+.firstname-input {
+  outline: 0;
+  background: #f2f2f2;
+  width: 100%;
+  border: 0;
+  border-radius: 5px;
+  padding: 15px;
+  box-sizing: border-box;
+}
+.lastname-input {
+  outline: 0;
+  background: #f2f2f2;
+  width: 100%;
+  border: 0;
+  border-radius: 5px;
+  padding: 15px;
+  box-sizing: border-box;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+.age-input {
+  outline: 0;
+  background: #f2f2f2;
+  width: 10rem;
+  border: 0;
+  border-radius: 5px;
+  padding: 15px;
+  box-sizing: border-box;
+  width: 100%;
+}
+.username-input {
+  outline: 0;
+  background: #f2f2f2;
+  width: 10rem;
+  border: 0;
+  border-radius: 5px;
+  padding: 15px;
+  box-sizing: border-box;
+}
+.createpass-input {
+  outline: 0;
+  background: #f2f2f2;
+  width: 10rem;
+  border: 0;
+  border-radius: 5px;
+  padding: 15px;
+  box-sizing: border-box;
+}
+.confirmpass-input {
+  outline: 0;
+  background: #f2f2f2;
+  width: 10rem;
+  border: 0;
+  border-radius: 5px;
+  padding: 15px;
+  box-sizing: border-box;
+}
+.last-input-con {
+  width: 100%;
+  @include u.breakpoint(xs) {
+    margin-left: 1rem;
+  }
+}
+
+.gender-con {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.age-con {
+  margin: 0 0 1rem 0;
+  width: 100%;
+  margin-left: 1rem;
+}
+.age-input-con {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+.email-con {
+  margin: 0 0 1rem 0;
+  width: 100%;
+}
+.username-con {
+  margin: 0 0 1rem 0;
+  width: 100%;
+}
+.username-input {
+  width: 100%;
+}
+.createpass-con {
+  margin: 0 0 1rem 0;
+  width: 100%;
+}
+.createpass-input {
+  width: 100%;
+}
+.confirmpass-con {
+  margin: 0 0 1rem 0;
+  width: 100%;
+}
+.confirmpass-input {
+  width: 100%;
+}
+.error-con {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 100%;
+}

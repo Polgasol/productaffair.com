@@ -64,9 +64,11 @@ router.get(
       if (timeDifference > 1) {
         const x = timeDifference - 1;
         const newScore = baseScore * Math.exp(-8 * x * x);
+        // eslint-disable-next-line no-return-await
         return await redisClient.v4.zAdd('postsSortedSet', [{ score: newScore, value: postID }]);
       }
       // if post is just new but no views, it needs to be ranked higher than post with views
+      // eslint-disable-next-line no-return-await
       return await redisClient.v4.zAdd('postsSortedSet', [{ score: baseScore, value: postID }]);
     });
     if (checkIfSortedSetExist === 0) {

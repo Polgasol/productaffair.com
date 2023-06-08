@@ -1,0 +1,18 @@
+@use "../../../../styles//utilities/" as u;
+
+.like-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: u.toRem(5);
+  &__unlike-icon {
+    color: none;
+    cursor: pointer;
+  }
+  &__like-icon {
+    color: var(--blue);
+    cursor: pointer;
+  }
+}
+
+

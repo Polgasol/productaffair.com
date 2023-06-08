@@ -5,12 +5,10 @@ phases:
   install:
     runtime-versions:
       nodejs: 16
-    commands:
-      - npm install -g typescript
-      - npm install
   pre_build:
     commands:
       - echo install pre build commands
+      - npm install 
   build:
     commands:
       - echo Running tests
@@ -18,7 +16,8 @@ phases:
       - echo building
   post_build:
     commands:
-      - echo Entering Post_Build Phase
+      - echo Entering Post_Build Phase, running node dist production files
+      - node dist/index.js NODE_ENV=production
 artifacts:
   files:
     - '**/*'

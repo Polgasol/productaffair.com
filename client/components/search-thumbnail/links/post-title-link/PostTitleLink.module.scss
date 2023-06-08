@@ -1,0 +1,23 @@
+@use "../../../../styles/utilities/" as u;
+@import "../../../../styles/mixins.scss";
+@import "../../../../styles/variables.scss";
+
+.post-title {
+  // margin: 0 0.2rem 0 0.2rem;
+  width: 100%;
+  white-space: initial; // this is the key in ellipsis
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
+  &__link {
+    color: var(--dark-text1);
+    font-weight: 600;
+    font-size: u.toRem(12);
+    @include u.breakpoint(xs) {
+      font-size: u.toRem(16);
+    }
+  }
+}

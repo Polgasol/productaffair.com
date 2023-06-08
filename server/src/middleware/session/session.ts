@@ -13,8 +13,10 @@ const sessions = session({
   cookie: {
     maxAge: 86400000, // 24 hr = 86,400,000 ms
     httpOnly: true,
-    secure: false,
+    // eslint-disable-next-line no-unneeded-ternary
+    secure: process.env.NODE_ENV === 'production' ? true : false,
     sameSite: 'lax',
+    domain: process.env.NODE_ENV === 'production' ? '.productaffair.com' : undefined,
     // secure: true, allowed only if https na yung website
     // sameSite: true,  blocks CORS requests on cookies. This will affect the workflow on API calls and mobile applications.
   },

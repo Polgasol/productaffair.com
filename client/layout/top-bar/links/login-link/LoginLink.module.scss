@@ -1,0 +1,13 @@
+@use "../../../../styles/utilities" as m;
+
+.login {
+  margin-right: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  &__link {
+    color: var(--white);
+    @include m.font-size(s);
+  }
+}

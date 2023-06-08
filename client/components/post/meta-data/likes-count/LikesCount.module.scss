@@ -1,0 +1,8 @@
+@use "../../../../styles//utilities/" as u;
+
+.likes-count {
+  margin: 0 u.toRem(15) 0 0;
+  &__text {
+    font-size: 0.9rem;
+  }
+}

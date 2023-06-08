@@ -2,6 +2,7 @@ import express from 'express';
 import { S3 } from 'aws-sdk';
 import ApiError from '../../middleware/api-error-handler/apiError';
 import redisClient from '../../models/redis/redis';
+// import logger from '../../logger';
 // eslint-disable-next-line new-cap
 const router = express.Router();
 
@@ -10,9 +11,11 @@ router.get('/', async (req: any, res: any, next: any) => {
   const { user, page } = req.query;
   const s3 = new S3();
   const bucketName = process.env.AWS_S3_BUCKET_NAME as string;
-  const start = 0 + page * 24;
-  const end = 23 + page * 24;
-  const checkIfUserListExist = await redisClient.v4.exists(`user:list:${user}`);
+  const start = 0 + parseInt(page) * 24;
+  const end = 23 + parseInt(page) * 24;
+  const checkIfUserListExist = await redisClient.v4.exists(`user:list:${user}`).catch(() => {
+    return res.status(200).json({ data: undefined });
+  });
   if (checkIfUserListExist) {
     const getPostKeys = await redisClient.v4.lRange(`user:list:${user}`, start, end);
 
@@ -77,7 +80,7 @@ router.get('/', async (req: any, res: any, next: any) => {
     }
     return res.status(200).json({ data: await Promise.all(getPostData) });
   }
-  return next(ApiError.internalError('Error'));
+  return res.status(200).json({ data: 'No posts are available' });
 });
 
 export default router;

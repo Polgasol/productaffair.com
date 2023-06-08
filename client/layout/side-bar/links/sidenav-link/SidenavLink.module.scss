@@ -1,0 +1,10 @@
+@use '../../../../styles/utilities' as u;
+
+.nav-link {
+  margin-left: 1rem;
+  
+  &__link {
+    font-size: 1rem;
+    color: var(--dark-text1);
+  }
+}

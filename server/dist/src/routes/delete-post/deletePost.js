@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const aws_sdk_1 = require("aws-sdk");
-const logger_1 = __importDefault(require("../../logger"));
 const pool_1 = __importDefault(require("../../pool/pool"));
 const validateRegDto_1 = __importDefault(require("../../middleware/ajv-validation/validateRegDto"));
 const redis_1 = __importDefault(require("../../models/redis/redis"));
@@ -43,10 +42,11 @@ router.post(`/`, authCheck_1.authCheckMwDeletePost, (0, validateRegDto_1.default
                         if (err) {
                             return [null, 'Error'];
                         }
-                        return logger_1.default.info(data);
+                        return null;
                     });
                 });
-                if (iterate) {
+                const successIterate = yield Promise.all(iterate);
+                if (successIterate) {
                     return ['Success', null];
                 }
                 return [null, 'Error'];
@@ -77,9 +77,11 @@ router.post(`/`, authCheck_1.authCheckMwDeletePost, (0, validateRegDto_1.default
         const deletePostPg = (idPost, userId) => __awaiter(void 0, void 0, void 0, function* () {
             try {
                 yield pool_1.default.query('BEGIN');
-                yield pool_1.default.query(`DELETE FROM images WHERE fk_post_id=$1`, [idPost]);
-                yield pool_1.default.query(`DELETE FROM posts WHERE pk_post_id=$1`, [idPost]);
-                yield pool_1.default.query(`UPDATE users SET post_count=post_count-1 WHERE pk_users_id=$1`, [userId]);
+                yield pool_1.default.query(`DELETE FROM images WHERE fk_post_id=$1`, [Number(idPost)]);
+                yield pool_1.default.query(`DELETE FROM post_likes WHERE fk_post_id=$1`, [Number(idPost)]);
+                yield pool_1.default.query(`DELETE FROM views WHERE fk_post_id=$1`, [Number(idPost)]);
+                yield pool_1.default.query(`DELETE FROM posts WHERE pk_post_id=$1`, [Number(idPost)]);
+                yield pool_1.default.query(`UPDATE users SET post_count=post_count-1 WHERE pk_users_id=$1`, [Number(userId)]);
                 yield pool_1.default.query('COMMIT');
                 return ['Success', null];
             }

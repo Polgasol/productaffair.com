@@ -43,7 +43,7 @@ router.get('/:postId', (req, res, next) => {
                 const getPost = yield redis_1.default.v4.hGetAll(`post:${postId}`);
                 const profileImg = yield redis_1.default.v4.hGet(`user:${getPost.user_id}`, 'profile_img_src');
                 const profileImgUrl = () => __awaiter(void 0, void 0, void 0, function* () {
-                    if (profileImg !== '""') {
+                    if (profileImg !== '""' && profileImg !== '') {
                         const signedUrl = yield s3.getSignedUrlPromise('getObject', {
                             Bucket: bucketName,
                             Key: `imageuploads/${profileImg}`,
@@ -102,10 +102,10 @@ router.get('/:postId', (req, res, next) => {
                     isAuthor: yield checkIfYouAreTheAuthor(),
                 });
             }
-            yield redis_1.default
+            const writeViewsRedis = yield redis_1.default
                 .multi()
                 .hSet(`view:${req.user.username}++${req.ip}++${postId}`, 'id', postId)
-                .expire(`view:${req.user.username}++${req.ip}++${postId}`, 150)
+                .expire(`view:${req.user.username}++${req.ip}++${postId}`, 600)
                 .hIncrBy(`post:${postId}`, 'views_count', 1)
                 .exec();
             const getPost = yield redis_1.default.v4.hGetAll(`post:${postId}`);
@@ -128,12 +128,15 @@ router.get('/:postId', (req, res, next) => {
                 }
             });
             const profileImgUrl = () => __awaiter(void 0, void 0, void 0, function* () {
-                const signedUrl = yield s3.getSignedUrlPromise('getObject', {
-                    Bucket: bucketName,
-                    Key: `imageuploads/${profileImg}`,
-                    Expires: 60,
-                });
-                return signedUrl;
+                if (profileImg !== '""' && profileImg !== '') {
+                    const signedUrl = yield s3.getSignedUrlPromise('getObject', {
+                        Bucket: bucketName,
+                        Key: `imageuploads/${profileImg}`,
+                        Expires: 60,
+                    });
+                    return signedUrl;
+                }
+                return null;
             });
             const profileImage = yield profileImgUrl();
             const postImages = yield redis_1.default.v4.hGetAll(`images:${postId}`);
@@ -178,7 +181,7 @@ router.get('/:postId', (req, res, next) => {
                 return Object.assign(Object.assign({ profileImg: profileImage }, getPost), { images });
             });
             const [successPgViewsPost, failPgViewsPost] = yield postViewsPg();
-            if (successPgViewsPost) {
+            if (writeViewsRedis && successPgViewsPost) {
                 return res.status(200).json({
                     data: yield sendData(),
                     isFollowed: yield checkIfAlreadyFollowed(),
@@ -194,12 +197,15 @@ router.get('/:postId', (req, res, next) => {
                 const getPost = yield redis_1.default.v4.hGetAll(`post:${postId}`);
                 const profileImg = yield redis_1.default.v4.hGet(`user:${getPost.user_id}`, 'profile_img_src');
                 const profileImgUrl = () => __awaiter(void 0, void 0, void 0, function* () {
-                    const signedUrl = yield s3.getSignedUrlPromise('getObject', {
-                        Bucket: bucketName,
-                        Key: `imageuploads/${profileImg}`,
-                        Expires: 60,
-                    });
-                    return signedUrl;
+                    if (profileImg !== '""' && profileImg !== '') {
+                        const signedUrl = yield s3.getSignedUrlPromise('getObject', {
+                            Bucket: bucketName,
+                            Key: `imageuploads/${profileImg}`,
+                            Expires: 60,
+                        });
+                        return signedUrl;
+                    }
+                    return null;
                 });
                 const profileImage = yield profileImgUrl();
                 const postImages = yield redis_1.default.v4.hGetAll(`images:${postId}`);
@@ -227,10 +233,10 @@ router.get('/:postId', (req, res, next) => {
                     isAuthor: 'Guest',
                 });
             }
-            yield redis_1.default
+            const writeViewsRedis = yield redis_1.default
                 .multi()
                 .hSet(`view:${req.ip}++${postId}`, 'id', postId)
-                .expire(`view:${req.ip}++${postId}`, 150)
+                .expire(`view:${req.ip}++${postId}`, 600)
                 .hIncrBy(`post:${postId}`, 'views_count', 1)
                 .exec();
             const getPost = yield redis_1.default.v4.hGetAll(`post:${postId}`);
@@ -249,12 +255,15 @@ router.get('/:postId', (req, res, next) => {
                 }
             });
             const profileImgUrl = () => __awaiter(void 0, void 0, void 0, function* () {
-                const signedUrl = yield s3.getSignedUrlPromise('getObject', {
-                    Bucket: bucketName,
-                    Key: `imageuploads/${profileImg}`,
-                    Expires: 60,
-                });
-                return signedUrl;
+                if (profileImg !== '""' && profileImg !== '') {
+                    const signedUrl = yield s3.getSignedUrlPromise('getObject', {
+                        Bucket: bucketName,
+                        Key: `imageuploads/${profileImg}`,
+                        Expires: 60,
+                    });
+                    return signedUrl;
+                }
+                return null;
             });
             const profileImage = yield profileImgUrl();
             const postImages = yield redis_1.default.v4.hGetAll(`images:${postId}`);
@@ -276,7 +285,7 @@ router.get('/:postId', (req, res, next) => {
                 return Object.assign(Object.assign({ profileImg: profileImage }, getPost), { images });
             });
             const [successPgViewsPost, failPgViewsPost] = yield postViewsPg();
-            if (successPgViewsPost) {
+            if (writeViewsRedis && successPgViewsPost) {
                 return res.status(200).json({
                     data: yield sendData(),
                     isFollowed: 'Guest',
@@ -289,12 +298,15 @@ router.get('/:postId', (req, res, next) => {
         const getPost = yield redis_1.default.v4.hGetAll(`post:${postId}`);
         const profileImg = yield redis_1.default.v4.hGet(`user:${getPost.user_id}`, 'profile_img_src');
         const profileImgUrl = () => __awaiter(void 0, void 0, void 0, function* () {
-            const signedUrl = yield s3.getSignedUrlPromise('getObject', {
-                Bucket: bucketName,
-                Key: `imageuploads/${profileImg}`,
-                Expires: 60,
-            });
-            return signedUrl;
+            if (profileImg !== '""' && profileImg !== '') {
+                const signedUrl = yield s3.getSignedUrlPromise('getObject', {
+                    Bucket: bucketName,
+                    Key: `imageuploads/${profileImg}`,
+                    Expires: 60,
+                });
+                return signedUrl;
+            }
+            return null;
         });
         const profileImage = yield profileImgUrl();
         const postImages = yield redis_1.default.v4.hGetAll(`images:${postId}`);

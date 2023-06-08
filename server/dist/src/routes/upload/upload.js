@@ -181,10 +181,10 @@ router.post('/', upload, (req, res, next) => __awaiter(void 0, void 0, void 0, f
                 }
                 try {
                     yield redis_1.default.executeIsolated((isolatedClient) => __awaiter(void 0, void 0, void 0, function* () {
-                        yield isolatedClient.watch(`post:${uploadDetails.rows[0].pk_post_id}`);
+                        yield isolatedClient.watch(`post:${details.rows[0].pk_post_id}`);
                         const multi = isolatedClient
                             .multi()
-                            .hSet(`images:${uploadDetails.rows[0].pk_post_id}`, JSON.stringify(filename), JSON.stringify(filename));
+                            .hSet(`images:${details.rows[0].pk_post_id}`, JSON.stringify(filename), JSON.stringify(filename));
                         return multi.exec();
                     }));
                 }
@@ -197,7 +197,7 @@ router.post('/', upload, (req, res, next) => __awaiter(void 0, void 0, void 0, f
             }));
             yield Promise.all(uploadParams.map((params) => s3.upload(params).promise())).catch(() => __awaiter(void 0, void 0, void 0, function* () {
                 const rollbackPostgres = yield pool_1.default.query('ROLLBACK');
-                const deleteImagesRedis = yield redis_1.default.del(`images:${uploadDetails.rows[0].pk_post_id}`);
+                const deleteImagesRedis = yield redis_1.default.del(`images:${details.rows[0].pk_post_id}`);
                 const deleteImages = uploadParams.map((params) => {
                     const parameters = {
                         Bucket: params.Bucket,

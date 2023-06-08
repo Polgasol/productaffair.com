@@ -16,8 +16,9 @@ const sessions = (0, express_session_1.default)({
     cookie: {
         maxAge: 86400000,
         httpOnly: true,
-        secure: false,
+        secure: process.env.NODE_ENV === 'production' ? true : false,
         sameSite: 'lax',
+        domain: process.env.NODE_ENV === 'production' ? '.productaffair.com' : undefined,
     },
     resave: true,
     saveUninitialized: true,

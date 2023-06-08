@@ -21,6 +21,7 @@ const like_1 = __importDefault(require("./like/like"));
 const unlike_1 = __importDefault(require("./unlike/unlike"));
 const profileInfo_1 = __importDefault(require("./profile-info/profileInfo"));
 const deletePost_1 = __importDefault(require("./delete-post/deletePost"));
+const comments_1 = __importDefault(require("./comments/comments"));
 const router = express_1.default.Router();
 router.get('/', authCheck_1.authCheck);
 router.use('/pages', pages_1.default);
@@ -40,5 +41,6 @@ router.use('/unfollow', unfollow_1.default);
 router.use('/profile', profile_1.default);
 router.use('/profileinfo', profileInfo_1.default);
 router.use('/deletepost', deletePost_1.default);
+router.use('/comments', comments_1.default);
 exports.default = router;
 //# sourceMappingURL=index.js.map

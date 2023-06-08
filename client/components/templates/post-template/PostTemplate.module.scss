@@ -1,0 +1,72 @@
+@use "../../../styles/utilities/" as u;
+
+.loading-container {
+  margin: 0 auto;
+  padding-top: u.toRem(32);
+  max-width: u.toRem(1760);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+.post-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: u.toRem(1200);
+  // width: 100vw; width @include u.toBreakpoint()
+  padding-top: u.toRem(5);
+  padding-bottom: u.toRem(5);
+  margin: 0 auto;
+  &__uploader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: u.toRem(500);
+    align-items: center;
+    padding: 0 u.toRem(8) 0 u.toRem(8);
+    margin-bottom: u.toRem(16);
+
+    @include u.breakpoint(sm) {
+      width: u.toRem(550);
+      padding: 0;
+    }
+    @include u.breakpoint(m) {
+      width: u.toRem(750);
+    }
+    @include u.breakpoint(l) {
+      width: u.toRem(450);
+    }
+    @include u.breakpoint(xxl) {
+      width: u.toRem(600);
+    }
+    @include u.breakpoint(xxxl) {
+      width: u.toRem(700);
+    }
+  }
+
+  &__uploader-name {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    //margin-top: u.toRem(5);
+  }
+  &__section {
+    display: flex;
+    flex-direction: column;
+    // width: 100%;
+    max-width: 100vw;
+
+    @include u.breakpoint(l) {
+      justify-content: center;
+      // flex-direction: row;
+      padding-top: u.toRem(25);
+      padding-bottom: u.toRem(25);
+    }
+  }
+}
+
+.main-content {
+  width: 100%;
+}

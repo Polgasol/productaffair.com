@@ -85,7 +85,7 @@ router.get(
       if (result) {
         return res.status(200).json({ data: await Promise.all(searchResults.reverse()) });
       }
-      return next(ApiError.internalError('Error'));
+      return res.status(200).json({ data: 'No posts are available' });
     } catch (e) {
       return next(ApiError.internalError('Error'));
     }

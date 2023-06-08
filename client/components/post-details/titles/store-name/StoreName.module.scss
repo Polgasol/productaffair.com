@@ -1,0 +1,11 @@
+@use '../../../../styles/utilities/' as u;
+@import "../../../../styles/mixins.scss";
+@import "../../../../styles/variables.scss";
+
+.store {
+  margin: u.toRem(4) 0 0 0;
+
+  &__text {
+    font-size: u.toRem(16);
+  }
+}

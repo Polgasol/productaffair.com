@@ -112,11 +112,13 @@ const authenticateUser = async (req: any, username: string, password: string, do
 };
 
 passport.use('local-login', new LocalStrategy({ passReqToCallback: true }, authenticateUser));
-// passport.serializeUser((user: any, done: any) => {
-//   done(null, user); // iseset mo yung result sa object na id
-//   logger.info('naset na');
-// });
-// passport.deserializeUser(async (id: any, done: any) => {
-//   done(null, id); // req.session.id is the name of the session req.user can now be acccessed
-//   logger.info('naset nanaman');
-// });
+passport.serializeUser((user: any, done: any) => {
+  process.nextTick(() => {
+    done(null, user);
+  }); // iseset mo yung result sa object na id
+});
+passport.deserializeUser(async (user: any, done: any) => {
+  process.nextTick(() => {
+    done(null, user);
+  }); // req.session.id is the name of the session req.user can now be acccessed
+});

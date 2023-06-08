@@ -4,7 +4,7 @@ const winston_1 = require("winston");
 const { timestamp, combine, errors, json } = winston_1.format;
 const buildProdLogger = () => {
     return (0, winston_1.createLogger)({
-        level: 'debug',
+        level: 'info',
         format: combine(timestamp(), errors({ stack: true }), json()),
         defaultMeta: { service: 'user-service' },
         transports: [new winston_1.transports.Console()],

@@ -1,0 +1,26 @@
+@use "../../../styles//utilities/" as u;
+
+.loading-container {
+  margin: 0 auto;
+  padding-top: u.toRem(32);
+  max-width: u.toRem(1760);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+.categories-main {
+  // position: absolute;
+  margin: 0 auto;
+  padding-top: u.toRem(32);
+  max-width: u.toRem(1760);
+  &__section {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(u.toRem(240), 1fr));
+    grid-gap: u.toRem(20);
+    overflow: hidden;
+    width: 100%;
+    @include u.breakpoint(xs) {
+      padding: 0 1rem 1rem 1rem;
+    }
+  }
+}

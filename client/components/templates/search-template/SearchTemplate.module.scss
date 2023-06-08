@@ -1,0 +1,50 @@
+@use "../../../styles//utilities/" as u;
+
+.loading-container {
+  margin: 0 auto;
+  padding-top: u.toRem(32);
+  max-width: u.toRem(1760);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+.search-main {
+  // position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: u.toRem(32);
+  max-width: u.toRem(1920);
+  min-width: u.toRem(240);
+
+  &__section {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(u.toRem(240), 1fr));
+    grid-gap: u.toRem(20);
+    // padding: 0 1rem 1rem 1rem;
+    overflow: hidden;
+    width: 100%;
+
+    @include u.breakpoint(xxs) {
+      grid-template-columns: repeat(1, minmax(u.toRem(310), 1fr));
+    }
+    @include u.breakpoint(xs) {
+      grid-template-columns: repeat(1, minmax(u.toRem(370), 1fr));
+    }
+    @include u.breakpoint(xsx) {
+      grid-template-columns: repeat(1, minmax(u.toRem(400), 1fr));
+    }
+    @include u.breakpoint(s) {
+      grid-template-columns: repeat(1, minmax(u.toRem(450), 1fr));
+    }
+    @include u.breakpoint(sm) {
+      grid-template-columns: repeat(1, minmax(u.toRem(600), 1fr));
+    }
+    @include u.breakpoint(m) {
+      grid-template-columns: repeat(1, minmax(u.toRem(700), 1fr));
+    }
+    @include u.breakpoint(l) {
+      grid-template-columns: repeat(1, minmax(u.toRem(800), 1fr));
+    }
+  }
+}

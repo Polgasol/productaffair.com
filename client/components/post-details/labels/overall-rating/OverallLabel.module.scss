@@ -1,0 +1,12 @@
+@use '../../../../styles/utilities/' as u;
+@import "../../.././../styles/mixins.scss";
+@import "../../.././../styles/variables.scss";
+
+.overall {
+  margin-right: u.toRem(12);
+
+  &__label {
+    font-size: u.toRem(16);
+    font-weight: 600;
+  }
+}

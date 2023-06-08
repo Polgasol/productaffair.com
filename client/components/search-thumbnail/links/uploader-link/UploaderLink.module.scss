@@ -1,0 +1,16 @@
+@use "../../../../styles/utilities/" as u;
+@import "../../../../styles/mixins.scss";
+@import "../../../../styles/variables.scss";
+
+.author {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &__link {
+    color: var(--meta-data);
+    font-size: u.toRem(12);
+    @include u.breakpoint(xs) {
+      font-size: u.toRem(16);
+    }
+  }
+}

@@ -1,0 +1,8 @@
+@use '../../../../styles/utilities/' as u;
+
+.like-btn {
+  &__btn {
+    color: var(--dark-text1);
+    cursor: pointer;
+  }
+}

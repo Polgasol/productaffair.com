@@ -15,11 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.authCheckMw = exports.authCheck = void 0;
 const apiError_1 = __importDefault(require("../api-error-handler/apiError"));
 const authCheck = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('Dito na sa AuthCheck before if statements');
     if (req.user.id) {
         if ((req.user.authtype === 'local' && req.user.verified === true) ||
             (req.user.authtype === 'google' && req.user.verified === true)) {
-            console.log('Auth is local or google and verified is true');
             return res.status(200).json({
                 data: {
                     auth: {
@@ -36,7 +34,6 @@ const authCheck = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             });
         }
         if (req.user.authtype === 'google' && req.user.verified === false) {
-            console.log('Google auth but not verified');
             return res.status(200).json({
                 data: {
                     auth: {
@@ -53,7 +50,6 @@ const authCheck = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             });
         }
         if (req.user.authtype === 'local' && req.user.verified === false) {
-            console.log('Local auth but not verified');
             return res.status(200).json({
                 data: {
                     auth: {
@@ -69,10 +65,8 @@ const authCheck = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                 },
             });
         }
-        console.log('Session is present but error occurs');
         return next(apiError_1.default.internalError('Error'));
     }
-    console.log('No session has been created, guest user is only abailable');
     return res.status(200).json({
         data: {
             auth: {
@@ -90,15 +84,12 @@ const authCheck = (req, res, next) => __awaiter(void 0, void 0, void 0, function
 });
 exports.authCheck = authCheck;
 const authCheckMw = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('Dito na sa AuthCheck before if statements');
     if (req.user) {
         if ((req.user.authtype === 'local' && req.user.verified === true) ||
             (req.user.authtype === 'google' && req.user.verified === true)) {
-            console.log('Auth is local or google and verified is true');
             return next();
         }
         if (req.user.authtype === 'google' && req.user.verified === false) {
-            console.log('Google auth but not verified');
             return res.status(200).json({
                 data: {
                     auth: {
@@ -115,7 +106,6 @@ const authCheckMw = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             });
         }
         if (req.user.authtype === 'local' && req.user.verified === false) {
-            console.log('Local auth but not verified');
             return res.status(200).json({
                 data: {
                     auth: {
@@ -131,10 +121,8 @@ const authCheckMw = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
                 },
             });
         }
-        console.log('Session is present but error occurs');
         return next(apiError_1.default.internalError('Error'));
     }
-    console.log('No session has been created, guest user is only abailable');
     return res.status(200).json({
         data: {
             auth: {

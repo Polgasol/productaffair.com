@@ -1,0 +1,19 @@
+@use '../../../styles/utilities/' as u;
+@import '../../../styles/mixins.scss';
+@import '../../../styles/variables.scss';
+
+.loading-container {
+  margin: 0 auto;
+  padding-top: u.toRem(32);
+  max-width: u.toRem(1760);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+.register-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.00rem;
+  box-sizing: border-box;
+}

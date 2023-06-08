@@ -1,0 +1,12 @@
+@use "../../../../styles/utilities/" as u;
+
+.categories {
+  margin-top: 0.5rem;
+
+  &__link {
+    font-size: 1rem;
+    text-decoration: none;
+    cursor: pointer;
+    color: var(--dark-text1);
+  }
+}

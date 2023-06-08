@@ -1,0 +1,120 @@
+@use "../../styles/utilities/" as u;
+
+.loading-container {
+  // margin: 0 auto;
+  // padding-top: u.toRem(32);
+  // max-width: u.toRem(1760);
+  // height: 100vh;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: u.toRem(16);
+
+  &__loading {
+    color: var(--meta-data);
+  }
+}
+
+.post-comments {
+  // &__comment-section {
+  //   display: flex;
+  //   flex-direction: column;
+  //   justify-content: left;
+  //   box-sizing: border-box;
+  //   width: 100%;
+  //   margin-top: 1rem;
+  //   background: #e2e2e2;
+  //   padding: 0 0.9rem 0.9rem 0.9rem;
+  // }
+
+  &__comment-section-body {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 100%;
+    background: var(--white);
+    margin-top: 1rem;
+    border-radius: 0.25rem;
+    padding: 1rem 0.5rem 1rem 0.5rem;
+    min-height: 6.5rem;
+  }
+  &__comment-top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  &__comment-name {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-left: 0.5rem;
+  }
+  &__comment-mid {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+  &__comment-likes {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-left: 0.5rem;
+    margin-top: u.toRem(10);
+  }
+  &__comment-bot {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  &__comment-readmore {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+  }
+  &__error-con {
+    width: 100%;
+    margin-top: u.toRem(10);
+  }
+  &__error {
+    color: var(--red);
+    font-size: u.toRem(16);
+    font-weight: 600;
+  }
+  &__comment-available {
+    width: 100%;
+    height: u.toRem(50);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: u.toRem(10);
+  }
+  &__comment-available-text {
+    color: var(--meta-data);
+    font-weight: 600;
+  }
+}
+.comment-input-con {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: u.toRem(20);
+
+  &__text {
+    color: var(--red);
+    font-weight: 600;
+  }
+}

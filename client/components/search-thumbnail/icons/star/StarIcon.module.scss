@@ -1,0 +1,16 @@
+@use "../../../../styles/utilities/" as u;
+
+.star {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 0.25rem;
+
+  &__icon {
+    color: var(--yellow);
+    font-size: u.toRem(8);
+    @include u.breakpoint(xs) {
+      font-size: u.toRem(16);
+    }
+  }
+}

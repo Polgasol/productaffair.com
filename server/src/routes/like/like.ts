@@ -65,10 +65,8 @@ router.post(
       if (successLikeRedis && successLikePg) {
         return res.status(200).json({ data: 'Like' });
       }
-
       return next(ApiError.internalError('Error'));
     }
-
     return next(ApiError.internalError('Error'));
   },
 );

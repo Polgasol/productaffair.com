@@ -1,0 +1,13 @@
+@import '../../styles/mixins.scss';
+
+.login-con {
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  border-radius: 0.50rem;
+  width: 20rem;
+  background-color: white;
+  padding: 1rem 2rem 1rem 2rem;
+  height: 23rem;
+  margin: 1.5rem 0 0 0;
+}

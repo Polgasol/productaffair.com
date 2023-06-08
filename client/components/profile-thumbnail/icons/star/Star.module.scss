@@ -1,0 +1,12 @@
+@use '../../../../styles/utilities/' as u;
+
+.star {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 0.25rem;
+  &__icon {
+    // font-size: 5rem;
+    color: var(--yellow);
+  }
+}

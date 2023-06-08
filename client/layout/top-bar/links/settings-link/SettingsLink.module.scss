@@ -1,0 +1,10 @@
+@import '../../../../styles/mixins.scss';
+@import '../../../../styles/variables.scss';
+
+.settings-link {
+  color: $color2;
+  font-size: 0.80rem;
+}
+.settings-link-con {
+  margin-left: 1.00rem;
+}

@@ -1,0 +1,12 @@
+@use '../../../../../styles/utilities/' as u;
+
+.logout {
+
+  &__btn {
+    background-color: transparent;
+    outline: none;
+    color: var(--white);
+    border: none;
+    cursor: pointer;
+  }
+}

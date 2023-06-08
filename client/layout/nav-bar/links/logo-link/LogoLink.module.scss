@@ -1,0 +1,12 @@
+@use "../../../../styles//utilities/" as u;
+.logo {
+  &__link {
+    color: var(--white);
+    font-size: 1rem;
+    background: transparent;
+    @include u.breakpoint(m) {
+      font-size: 1.6rem;
+      margin-left: 2rem;
+    }
+  }
+}

@@ -1,0 +1,13 @@
+@import "../../../../styles/mixins.scss";
+@import "../../../../styles/variables.scss";
+
+.dot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 0.25rem 0 0.25rem;
+  &__icon {
+    font-size: $s;
+    color: $color5;
+  }
+}
